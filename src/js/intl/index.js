@@ -1,40 +1,12 @@
-var _ = require('underscore');
-var constants = require('../util/constants');
-var util = require('../util');
-var GlobalState = require('../util/globalState');
+var LocaleStore = require('../stores/LocaleStore');
 
+var _ = require('underscore');
 var strings = require('../intl/strings').strings;
 
-var getDefaultLocale = exports.getDefaultLocale = function() {
-  return 'en_US';
-};
-
-var headerLocaleMap = exports.headerLocaleMap = {
-  'zh-CN': 'zh_CN',
-  'zh-TW': 'zh_TW',
-};
-
-// resolve the messy mapping between browser language
-// and our supported locales
-var langLocaleMap = exports.langLocaleMap = {
-  en: 'en_US',
-  zh: 'zh_CN',
-  ja: 'ja',
-  ko: 'ko',
-  es: 'es_AR',
-  fr: 'fr_FR',
-  de: 'de_DE',
-};
+var getDefaultLocale = LocaleStore.getDefaultLocale;
 
 var fallbackMap = {
   'zh_TW': 'zh_CN'
-};
-
-var getLocale = exports.getLocale = function() {
-  if (GlobalState.locale) {
-    return GlobalState.locale;
-  }
-  return getDefaultLocale();
 };
 
 // lets change underscores template settings so it interpolates
@@ -59,10 +31,10 @@ var str = exports.str = function(key, params) {
   // 'You can not delete the branch bugFix because you are currently on that branch!
   //  This is error number 3'
 
-  var locale = getLocale();
+  var locale = LocaleStore.getLocale();
   if (!strings[key]) {
     console.warn('NO INTL support for key ' + key);
-    return 'NO INTL support for key ' + key;
+    return 'NO INTL support for key ' + key + '. this is probably a dev error';
   }
 
   if (!strings[key][locale]) {
@@ -83,7 +55,7 @@ var str = exports.str = function(key, params) {
   );
 };
 
-var getIntlKey = exports.getIntlKey = function(obj, key) {
+var getIntlKey = exports.getIntlKey = function(obj, key, overrideLocale) {
   if (!obj || !obj[key]) {
     throw new Error('that key ' + key + 'doesnt exist in this blob' + obj);
   }
@@ -96,27 +68,33 @@ var getIntlKey = exports.getIntlKey = function(obj, key) {
     );
   }
 
-  return obj[key][getLocale()];
+  var locale = overrideLocale || LocaleStore.getLocale();
+  return obj[key][locale];
 };
 
 exports.todo = function(str) {
   return str;
 };
 
-var getDialog = exports.getDialog = function(obj) {
-  var defaultLocale = getDefaultLocale();
-  return getIntlKey(obj, 'dialog') || obj.dialog[defaultLocale];
+exports.getDialog = function(obj) {
+  return getIntlKey(obj, 'dialog') || obj.dialog[getDefaultLocale()];
 };
 
-var getHint = exports.getHint = function(level) {
-  return getIntlKey(level, 'hint') || str('error-untranslated');
+exports.getHint = function(level) {
+  if (!getIntlKey(level, 'hint')) {
+    return getIntlKey(level, 'hint', getDefaultLocale()) + ' -- ' + str('error-untranslated');
+  }
+  return getIntlKey(level, 'hint');
 };
 
-var getName = exports.getName = function(level) {
-  return getIntlKey(level, 'name') || str('error-untranslated');
+exports.getName = function(level) {
+  if (!getIntlKey(level, 'name')) {
+    return getIntlKey(level, 'name', getDefaultLocale()) + ' -- ' + str('error-untranslated');
+  }
+  return getIntlKey(level, 'name');
 };
 
-var getStartDialog = exports.getStartDialog = function(level) {
+exports.getStartDialog = function(level) {
   var startDialog = getIntlKey(level, 'startDialog');
   if (startDialog) { return startDialog; }
 
@@ -135,5 +113,3 @@ var getStartDialog = exports.getStartDialog = function(level) {
 
   return startCopy;
 };
-
-

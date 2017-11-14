@@ -1,13 +1,14 @@
 var _ = require('underscore');
 var Q = require('q');
-// horrible hack to get localStorage Backbone plugin
-var Backbone = (!require('../util').isBrowser()) ? require('backbone') : window.Backbone;
+var Backbone = require('backbone');
+var LocaleStore = require('../stores/LocaleStore');
 
 var util = require('../util');
 var intl = require('../intl');
 var log = require('../log');
 var KeyboardListener = require('../util/keyboard').KeyboardListener;
 var Main = require('../app');
+var LevelStore = require('../stores/LevelStore');
 
 var ModalTerminal = require('../views').ModalTerminal;
 var ContainedBase = require('../views').ContainedBase;
@@ -32,16 +33,16 @@ var LevelDropdownView = ContainedBase.extend({
       selectedTab: queryParams.defaultTab || 'main',
       tabs: [{
         id: 'main',
-        name: intl.todo('Main')
+        name: intl.str('main-levels-tab')
       }, {
         id: 'remote',
-        name: intl.todo('Remote')
+        name: intl.str('remote-levels-tab')
       }]
     };
 
     this.navEvents = _.clone(Backbone.Events);
     this.navEvents.on('clickedID', _.debounce(
-      _.bind(this.loadLevelID, this),
+      this.loadLevelID.bind(this),
       300,
       true
     ));
@@ -61,24 +62,37 @@ var LevelDropdownView = ContainedBase.extend({
       wait: true
     });
 
-    this.sequences = Main.getLevelArbiter().getSequences();
-    this.sequenceToLevels = Main.getLevelArbiter().getSequenceToLevels();
+    this.sequences = LevelStore.getSequences();
+    this.sequenceToLevels = LevelStore.getSequenceToLevels();
 
     this.container = new ModalTerminal({
       title: intl.str('select-a-level')
     });
 
+    // Lol WTF. For some reason we cant use this.render.bind(this) so
+    // instead setup a lame callback version. The CasperJS tests
+    // fail otherwise.
+    var that = this;
+    LocaleStore.subscribe(function() {
+      that.render.apply(that);
+    });
+    LevelStore.subscribe(function() {
+      that.render();
+    });
     this.render();
-
-    Main.getEvents().on('resetMapSolved', this.render, this);
-    Main.getEvents().on('localeChanged', this.render, this);
-
     if (!options.wait) {
       this.show();
     }
   },
 
   render: function() {
+    this.container.updateTitle(
+      intl.str('select-a-level')
+    );
+    this.updateTabNames([
+      intl.str('main-levels-tab'),
+      intl.str('remote-levels-tab')
+    ]);
     LevelDropdownView.__super__.render.apply(this, arguments);
     this.buildSequences();
   },
@@ -100,6 +114,12 @@ var LevelDropdownView = ContainedBase.extend({
       this.selectedSequence = this.getSequencesOnTab()[0];
       this.selectedIndex = 0;
       this.updateSelectedIcon();
+    }
+  },
+
+  updateTabNames: function(names) {
+    for(var index = 0; index < names.length; ++index) {
+      this.JSON.tabs[index].name = names[index];
     }
   },
 
@@ -240,7 +260,7 @@ var LevelDropdownView = ContainedBase.extend({
   },
 
   getIndexForID: function(id) {
-    return Main.getLevelArbiter().getLevel(id).index;
+    return LevelStore.getLevel(id).index;
   },
 
   selectFirst: function() {
@@ -274,7 +294,6 @@ var LevelDropdownView = ContainedBase.extend({
     // also go find the series and update the about
     _.each(this.seriesViews, function(view) {
       if (view.levelIDs.indexOf(id) === -1) {
-        view.resetAbout();
         return;
       }
       view.updateAboutForLevelID(id);
@@ -316,7 +335,7 @@ var LevelDropdownView = ContainedBase.extend({
         'commandSubmitted',
         'level ' + id
       );
-      var level = Main.getLevelArbiter().getLevel(id);
+      var level = LevelStore.getLevel(id);
       var name = level.name.en_US;
       log.levelSelected(name);
     }
@@ -347,18 +366,21 @@ var SeriesView = BaseView.extend({
   template: _.template($('#series-view').html()),
   events: {
     'click div.levelIcon': 'click',
-    'mouseenter div.levelIcon': 'enterIcon',
-    'mouseleave div.levelIcon': 'leaveIcon'
+    'mouseenter div.levelIcon': 'enterIcon'
   },
 
   initialize: function(options) {
     this.name = options.name || 'intro';
     this.navEvents = options.navEvents;
-    this.info = Main.getLevelArbiter().getSequenceInfo(this.name);
-    this.levels = Main.getLevelArbiter().getLevelsInSequence(this.name);
+    this.info = LevelStore.getSequenceInfo(this.name);
+    this.levels = LevelStore.getLevelsInSequence(this.name);
 
     this.levelIDs = [];
+    var firstLevelInfo = null;
     _.each(this.levels, function(level) {
+      if (firstLevelInfo === null) {
+        firstLevelInfo = this.formatLevelAbout(level.id);
+      }
       this.levelIDs.push(level.id);
     }, this);
 
@@ -368,6 +390,7 @@ var SeriesView = BaseView.extend({
     this.JSON = {
       displayName: intl.getIntlKey(this.info, 'displayName'),
       about: intl.getIntlKey(this.info, 'about') || "&nbsp;",
+      levelInfo: firstLevelInfo,
       ids: this.levelIDs
     };
 
@@ -380,7 +403,7 @@ var SeriesView = BaseView.extend({
     // property changing but it's the 11th hour...
     var toLoop = this.$('div.levelIcon').each(function(index, el) {
       var id = $(el).attr('data-id');
-      $(el).toggleClass('solved', Main.getLevelArbiter().isLevelSolved(id));
+      $(el).toggleClass('solved', LevelStore.isLevelSolved(id));
     });
   },
 
@@ -389,13 +412,8 @@ var SeriesView = BaseView.extend({
     return $(element).attr('data-id');
   },
 
-  resetAbout: function() {
-    this.$('p.about').text(intl.getIntlKey(this.info, 'about'))
-      .css('font-style', 'inherit');
-  },
-
   setAbout: function(content) {
-    this.$('p.about').text(content).css('font-style', 'italic');
+    this.$('p.levelInfo').text(content);
   },
 
   enterIcon: function(ev) {
@@ -404,12 +422,19 @@ var SeriesView = BaseView.extend({
   },
 
   updateAboutForLevelID: function(id) {
-    var level = Main.getLevelArbiter().getLevel(id);
-    this.setAbout(intl.getName(level));
+    this.setAbout(this.formatLevelAbout(id));
   },
 
-  leaveIcon: function() {
-    this.resetAbout();
+  formatLevelAbout: function(id) {
+    var level = LevelStore.getLevel(id);
+    return this.getLevelNumberFromID(id) +
+      ': ' +
+      intl.getName(level);
+  },
+
+  getLevelNumberFromID: function(id) {
+    // hack -- parse out the level number from the ID
+    return id.replace(/[^0-9]/g, '');
   },
 
   click: function(ev) {

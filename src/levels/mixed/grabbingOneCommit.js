@@ -19,20 +19,26 @@ exports.level = {
     "fr_FR": "Choisir seulement 1 commit",
     "de_DE": "Einen Commit pflücken",
     "es_AR": "Tomando un único commit",
+    "pt_BR": "Pegando um único commit",
     "ja": "一つのコミットのみを取得",
-    "zh_CN": "只取一个 commit",
-    "zh_TW": "只取一個 commit"
+    "zh_CN": "只取一个提交记录",
+    "zh_TW": "只取一個 commit",
+    "ru_RU": "Выберем один коммит.",
+    "uk": "Вибираємо всього один коміт"
   },
   "hint": {
     "en_US": "Remember, interactive rebase or cherry-pick is your friend here",
     "de_DE": "Vergiss nicht: hier kommst du mit interaktivem Rebase oder Cherry-Picking weiter",
     "fr_FR": "Souvenez-vous, les rebases interactifs ou cherry-pick sont vos amis ici.",
     "es_AR": "Acordate, el rebase interactivo o cherry-pick son tus amigos acá",
+    "pt_BR": "Lembre-se, o rebase interativo ou o cherry-pick são seus amigos aqui",
     "ja": "このレベルではインタラクティブモードのrebaseやcherry-pickがクリアのカギです",
     "ko": "대화식 리베이스(rebase -i)나 or 체리픽(cherry-pick)을 사용하세요",
-    "zh_CN": "记住，交互式 rebase 或者 cherry-pick 会很有帮助",
-    "zh_TW": "記住，使用互動式的 rebase 或者 cherry-pick 會很有幫助"
-  },
+    "zh_CN": "你有两个朋友，cherry-pick 和 rebase -i",
+    "zh_TW": "記住，使用互動式的 rebase 或者 cherry-pick 會很有幫助",
+    "ru_RU": "Не забывай, что интерактивный rebase и cherry-pick – это твои друзья!",
+    "uk": "Не забувай, що інтерактивний rebase та cherry-pick -- це твої друзі!"
+      },
   "startDialog": {
     "en_US": {
       "childViews": [
@@ -44,7 +50,7 @@ exports.level = {
               "",
               "Here's a development situation that often happens: I'm trying to track down a bug but it is quite elusive. In order to aid in my detective work, I put in a few debug commands and a few print statements.",
               "",
-              "All of these debugging / print statements are in their own branches. Finally I track down the bug, fix it, and rejoice!",
+              "All of these debugging / print statements are in their own commits. Finally I track down the bug, fix it, and rejoice!",
               "",
               "Only problem is that I now need to get my `bugFix` back into the `master` branch. If I simply fast-forwarded `master`, then `master` would get all my debug statements which is undesirable. There has to be another way..."
             ]
@@ -93,7 +99,7 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "Pour réussir ce niveau, nous avons besoin de dire à Git quel commit particulier recopier. C'est comme pour le niveau précédent -- nous pouvons utiliser les mêmes commandes :",
+              "Pour réussir ce niveau, nous avons besoin de dire à Git quel commit particulier recopier. C'est comme pour le niveau précédent : nous pouvons utiliser les mêmes commandes :",
               "",
               "* `git rebase -i`",
               "* `git cherry-pick`"
@@ -122,7 +128,7 @@ exports.level = {
               "",
               "Todas estas cosas de imprimir y debuggear estan en su propia rama. Finalmente encuentro el problema, lo soluciono, ¡y disfruto!",
               "",
-              "El único problema es que ahora necesito llear mi `bugFix` a la rama `master`. Si simplemente fast-forwardeo `master`, entonces `master` va a tener todos mis agregados de debugging, que es indeseado. Tiene que haber otro modo..."
+              "El único problema es que ahora necesito llevar mi `bugFix` a la rama `master`. Si simplemente fast-forwardeo `master`, entonces `master` va a tener todos mis agregados de debugging, que es indeseado. Tiene que haber otro modo..."
             ]
           }
         },
@@ -144,6 +150,45 @@ exports.level = {
           "options": {
             "markdowns": [
               "Este es un nivel más avanzado, así que está en vos decidir cuál de los dos comandos querés usar, pero para completar el nivel asegurate de que `master` recibe el commit que `bugFix` referencia."
+            ]
+          }
+        }
+      ]
+    },
+    "pt_BR": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Commits empilhados localmente",
+              "",
+              "Aqui está uma situação de acontece frequentemente com desenvolvedores: Estou tentando encontrar um bug, mas ele é escorregadio. Para auxiliar meu trabalho de detetive, eu coloco alguns comandos de debug e prints.",
+              "",
+              "Todos esses comandos de debug e mensagens estão em seus próprios ramos. Finalmente eu encontro o bug, corrijo, e me regozijo!",
+              "",
+              "O único problema é que agora eu preciso devolver o meu `bugFix` ao ramo `master`. Se eu simplesmente der um fast-forward no `master`, então o `master` terminará contendo todos os comandos de debug, o que é indesejável. Deve existir alguma outra forma..."
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Precisamos dizer ao git para copiar somente um dos commits. Esta situação é exatamente a mesma dos níveis anteriores a respeito de como mover trabalho -- podemos usar os mesmos comandos:",
+              "",
+              "* `git rebase -i`",
+              "* `git cherry-pick`",
+              "",
+              "Para alcançar o objetivo."
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Este é um nível avançado, então vamos deixar para você a decisão de qual comando usar, mas para completar este nível, certifique-se de que o `master` receba o commit referenciado por `bugFix`."
             ]
           }
         }
@@ -181,7 +226,7 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "Da dies ein späterer Level ist überlasse ich es dir zu entscheiden, welchen Befehl du benutzen willst. Aber um da Level zu schaffen musst du irgendwie sicherstellen, dass `maste` den Commit bekommt, auf den `bugFix` zeigt."
+              "Da dies ein späterer Level ist überlasse ich es dir zu entscheiden, welchen Befehl du benutzen willst. Aber um da Level zu schaffen musst du irgendwie sicherstellen, dass `master` den Commit bekommt, auf den `bugFix` zeigt."
             ]
           }
         }
@@ -235,13 +280,13 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "## 本地栈式提交 (Locally stacked commits)",
+              "## 本地栈式提交",
               "",
-              "设想一下一个经常发生的场景：我在追踪一个有点棘手的 bug，为了更好地排查，我添加了一些调试命令和打印语句。",
+              "来看一个在开发中经常会遇到的情况：我正在解决某个特别棘手的 Bug，为了便于调试而在代码中添加了一些调试命令并向控制台打印了一些信息。",
               "",
-              "所有的这些调试和打印语句都只在它们自己的分支里。最终我终于找到这个 bug，揪出来 fix 掉，然后撒花庆祝！",
+              "这些调试和打印语句都在它们各自的提交记录里。最后我终于找到了造成这个 Bug 的根本原因，解决掉以后觉得沾沾自喜！",
               "",
-              "现在唯一的问题就是要把我在 `bugFix` 分支里的工作合并回 `master` 分支。我可以简单地把 `master` 分支快进（fast-forward），但这样的话 `master` 分支就会包含我这些调试语句了。"
+              "最后就差把 `bugFix` 分支里的工作合并回 `master` 分支了。你可以选择通过 fast-forward 快速合并到 `master` 分支上，但这样的话 `master` 分支就会包含我这些调试语句了。你肯定不想这样，应该还有更好的方式……"
             ]
           }
         },
@@ -249,14 +294,12 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "现在就是 Git 大显神通的时候啦。解决这个问题的方法不止一个，但最直接的两个方法是：",
+              "实际我们只要让 Git 复制解决问题的那一个提交记录就可以了。跟之前我们在“整理提交记录”中学到的一样，我们可以使用",
               "",
               "* `git rebase -i`",
               "* `git cherry-pick`",
               "",
-              "交互（`-i`）衍合允许你选择哪些提交是要被保留，哪些要被舍弃。它允许你将提交重新排序。假如你要舍弃一些工作，这个会帮上很大的忙。",
-              "",
-              "Cherry-picking 能让你选择单独一个提交并且把它放到 `HEAD` 的最前端。"
+              "来达到目的。"
             ]
           }
         },
@@ -264,7 +307,7 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "本关是可选关卡，玩不玩随便你。但是如果你坚持要刷，确保 `master` 分支能拿到 `bugFix` 分支的相关提交（references）。"
+              "由于我们刚刚闯过类似的关卡，所以要不要再尝试一次就看你自己了。但是如果你想试一把的话，确保 `master` 分支能得到 `bugFix` 分支上的相关提交。"
             ]
           }
         }
@@ -295,7 +338,7 @@ exports.level = {
               "* `git rebase -i`",
               "* `git cherry-pick`",
               "",
-              "來完成這個目的"
+              "來完成這個目的。"
             ]
           }
         },
@@ -303,7 +346,7 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "這一個關卡是比較後面的關卡，你可以隨意決定你要選擇使用哪個指令，但是 `bugFix` 所指向的那個 commit 一定要可以被 `master` branch 包含到"
+              "這一個關卡是比較後面的關卡，你可以隨意決定你要選擇使用哪個指令，但是 `bugFix` 所指向的那個 commit 一定要可以被 `master` branch 包含到。"
             ]
           }
         }
@@ -345,6 +388,82 @@ exports.level = {
           "options": {
             "markdowns": [
               "이번 레벨을 통과하기 위해 어떤 방법을 쓰시든 자유입니다만, `master`브랜치가 `bugFix` 브랜치의 커밋을 일부 가져오게 해주세요."
+            ]
+          }
+        }
+      ]
+    },
+    "ru_RU": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Вот ситуация, которая часто случается при разработке: мы пытаемся отследить ошибку, но она не очень очевидна. Для того, чтобы достичь успеха на этом поприще, мы используем несколько команд для отладки и вывода",
+              "",
+              "Каждая отладочная команда (команды) вывода находится в своём коммите. В итоге мы нашли ошибку, исправили её и порадовались!",
+              "",
+              "Но проблема в том, что мы хотим добавить в `master` только исправление ошибки из ветки `bugFix`. Если мы воспользуемся простым fast-forward, то в `master` попадут также отладочные команды. Должен быть другой способ..."
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Надо заставить git копировать только один из коммитов. Это почти как в предыдущем уровне – мы можем использовать уже известные нам команды: ",
+              "",
+              "* `git rebase -i`",
+              "* `git cherry-pick`",
+              "",
+              "Чтобы достичь желаемого результата."
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "В этом уровне тебе решать, какую команду использовать, но чтобы закончить уровень, убедись, что в мастер попал коммит, на который ссылается `bugFix`"
+            ]
+          }
+        }
+      ]
+    },
+    "uk": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Локально складені коміти",
+              "",
+              "Ось ситуація з життя рядового програміста: я намагаюся відслідкувати баг, але це не завжди вдається. Щоб допомогти собі, я додаю кілька дебаг-команд та ще кілька println'ів.",
+              "",
+              "Всі ці команди для відлагодження та виводу данних знаходяться в своїх власних комітах. Врешті-решт я знаходжу баг, фікшу його та щиро радію!",
+              "",
+              "От тільки лишається проблема, що потрібно мій фікс перенести з `bugFix` назад в гілку `master`. Якщо я просто зроблю фастфорвард (fast-forwarded) в `master`, тоді в `master` потраплять всі мої println'и, що є зайвим. Має бути інший шлях..."
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Ми маємо сказати гіту скопіювати лише один коміт. Це все те ж саме, що й у попередніх рівнях, і ми можемо використати ті ж самі команди:",
+              "",
+              "* `git rebase -i`",
+              "* `git cherry-pick`",
+              "",
+              "для досягнення мети."
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "На цьому рівні тобі вирішувати якими командами користуватися, але щоб пройти цей рівень, впевнись що в `master` потрапить коміт, на який посилається `bugFix`."
             ]
           }
         }

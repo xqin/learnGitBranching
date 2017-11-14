@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var Q = require('q');
-// horrible hack to get localStorage Backbone plugin
-var Backbone = (!require('../util').isBrowser()) ? require('backbone') : window.Backbone;
+var Backbone = require('backbone');
 
 var util = require('../util');
+var intl = require('../intl');
 var KeyboardListener = require('../util/keyboard').KeyboardListener;
 var Command = require('../models/commandModel').Command;
 
@@ -50,7 +50,7 @@ var GitDemonstrationView = ContainedBase.extend({
     this.JSON.afterHTML = convert(this.JSON.afterMarkdowns);
 
     this.container = new ModalTerminal({
-      title: options.title || 'Git Demonstration'
+      title: options.title || intl.str('git-demonstration-title')
     });
     this.render();
     this.checkScroll();
@@ -98,10 +98,10 @@ var GitDemonstrationView = ContainedBase.extend({
 
     var whenHaveTree = Q.defer();
     HeadlessGit.getTreeQuick(this.options.beforeCommand, whenHaveTree);
-    whenHaveTree.promise.then(_.bind(function(tree) {
+    whenHaveTree.promise.then(function(tree) {
       this.mainVis.gitEngine.loadTree(tree);
       this.mainVis.gitVisuals.refreshTreeHarsh();
-    }, this));
+    }.bind(this));
   },
 
   takeControl: function() {
@@ -143,11 +143,11 @@ var GitDemonstrationView = ContainedBase.extend({
 
     var whenDone = Q.defer();
     this.dispatchCommand(this.JSON.command, whenDone);
-    whenDone.promise.then(_.bind(function() {
+    whenDone.promise.then(function() {
       this.$el.toggleClass('demonstrating', false);
       this.$el.toggleClass('demonstrated', true);
       this.releaseControl();
-    }, this));
+    }.bind(this));
   },
 
   negative: function(e) {
@@ -169,11 +169,11 @@ var GitDemonstrationView = ContainedBase.extend({
     var chainPromise = chainDeferred.promise;
 
     _.each(commands, function(command, index) {
-      chainPromise = chainPromise.then(_.bind(function() {
+      chainPromise = chainPromise.then(function() {
         var myDefer = Q.defer();
         this.mainVis.gitEngine.dispatch(command, myDefer);
         return myDefer.promise;
-      }, this));
+      }.bind(this));
       chainPromise = chainPromise.then(function() {
         return Q.delay(300);
       });
@@ -206,12 +206,12 @@ var GitDemonstrationView = ContainedBase.extend({
   show: function() {
     this.takeControl();
     if (this.visFinished) {
-      setTimeout(_.bind(function() {
+      setTimeout(function() {
         if (this.shown) {
           this.mainVis.setTreeIndex(300);
           this.mainVis.showHarsh();
         }
-      }, this), this.getAnimationTime() * 1.5);
+      }.bind(this), this.getAnimationTime() * 1.5);
     }
 
     this.shown = true;
@@ -232,14 +232,14 @@ var GitDemonstrationView = ContainedBase.extend({
       smallCanvas: true,
       zIndex: -1
     });
-    this.mainVis.customEvents.on('paperReady', _.bind(function() {
+    this.mainVis.customEvents.on('paperReady', function() {
       this.visFinished = true;
       this.dispatchBeforeCommand();
       if (this.shown) {
         // show the canvas once its done if we are shown
         this.show();
       }
-    }, this));
+    }.bind(this));
   }
 });
 

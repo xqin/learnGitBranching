@@ -13,13 +13,31 @@ _.templateSettings.evaluate = /\{\{-(.*?)\}\}/g;
 var indexFile = fs.readFileSync('src/template.index.html').toString();
 var indexTemplate = _.template(indexFile);
 
+/**
+ * This is SUPER jank but I cant get the underscore templating to evaluate
+ * correctly with custom regexes, so I'm just going to use interpolate
+ * and define the strings here.
+ */
+
+var prodDependencies = [
+  '<script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.1/es5-shim.min.js"></script>',
+  '<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>',
+  '<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js"></script>',
+  '<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>'
+];
+
+var devDependencies = [
+  '<script src="lib/jquery-1.8.0.min.js"></script>',
+  '<script src="lib/underscore-min.js"></script>',
+  '<script src="lib/raphael-min.js"></script>',
+  '<script src="lib/es5-shim.min.js"></script>'
+];
+
 /*global module:false*/
 module.exports = function(grunt) {
   // eventually have sound...?
   grunt.registerTask('compliment', 'Stay motivated!', function() {
-    var defaults = ['Awesome!!'];
-
-    var compliments = grunt.config('compliment.compliments') || defaults;
+    var compliments = grunt.config('compliment.compliments');
     var index = Math.floor(Math.random() * compliments.length);
 
     grunt.log.writeln(compliments[index]);
@@ -27,12 +45,12 @@ module.exports = function(grunt) {
 
   grunt.registerTask('lintStrings', 'Find if an INTL string doesnt exist', function() {
     var child_process = require('child_process');
-    var output = child_process.exec('node src/js/intl/checkStrings', function(err, output) {
+    child_process.exec('node src/js/intl/checkStrings', function(err, output) {
       grunt.log.writeln(output);
     });
   });
 
-  grunt.registerTask('buildIndex', 'stick in hashed resources', function() {
+  var buildIndex = function(config) {
     grunt.log.writeln('Building index...');
 
     // first find the one in here that we want
@@ -73,22 +91,32 @@ module.exports = function(grunt) {
     // output these filenames to our index template
     var outputIndex = indexTemplate({
       jsFile: hashedMinFile,
-      styleFile: hashedStyleFile
+      styleFile: hashedStyleFile,
+      jsDependencies: config.isProd ?
+        prodDependencies.join("\n") :
+        devDependencies.join("\n")
     });
     fs.writeFileSync('index.html', outputIndex);
-  });
+  };
+
+  grunt.registerTask('buildIndex', 'stick in hashed resources', buildIndex.bind(null, {isProd: true}));
+  grunt.registerTask('buildIndexDev', 'stick in hashed resources', buildIndex.bind(null, {isProd: false}));
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
       all: [
         'Gruntfile.js',
-        'spec/*.js',
+        '__tests__/*.spec.js',
         'src/js/**/*.js',
         'src/js/**/**/*.js',
-        'src/levels/**/*.js',
+        'src/levels/**/*.js'
       ],
       options: {
+        ignores: [
+          'src/js/**/*.ios.js',
+          'src/js/native_react_views/*.js'
+        ],
         curly: true,
         // sometimes triple equality is just redundant and unnecessary
         eqeqeq: false,
@@ -100,6 +128,10 @@ module.exports = function(grunt) {
         latedef: false,
         // use this in mocks
         forin: false,
+        // This gets annoying
+        globalstrict: false,
+        // for use strict warnings
+        node: true,
         ///////////////////////////////
         // All others are true
         //////////////////////////////
@@ -118,7 +150,9 @@ module.exports = function(grunt) {
         eqnull: true,
         browser: true,
         debug: true,
+        reporterOutput: '',
         globals: {
+          casper: true,
           Raphael: true,
           require: true,
           console: true,
@@ -143,6 +177,9 @@ module.exports = function(grunt) {
       ]
     },
     hash: {
+      options: {
+        mapping: ''
+      },
       js: {
         src: 'build/bundle.min.js',
         dest: 'build/'
@@ -169,38 +206,45 @@ module.exports = function(grunt) {
       }
     },
     jasmine_node: {
-      specNameMatcher: 'spec',
-      projectRoot: '.',
+      projectRoot: './__tests__/',
       forceExit: true,
       verbose: true,
       requirejs: false
     },
     browserify: {
+      options: {
+        transform: [require('grunt-react').browserify]
+      },
       dist: {
         files: {
-          'build/bundle.js': ['src/**/*.js', 'src/js/**/*.js'],
-        },
+          'build/bundle.js': [
+            'src/**/*.js',
+            'src/**/*.jsx'
+          ]
+        }
       }
     }
   });
 
   // all my npm helpers
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-jsxhint');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-hash');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-shell-spawn');
   grunt.loadNpmTasks('grunt-jasmine-node');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-react');
 
   grunt.registerTask('build',
-    ['clean', 'browserify', 'uglify', 'hash', 'buildIndex', 'shell', 'jasmine_node', 'jshint', 'lintStrings', 'compliment']
+    ['clean', 'browserify', 'uglify', 'hash', 'buildIndex', 'shell:gitAdd', 'jasmine_node', 'jshint', 'lintStrings', 'compliment']
   );
   grunt.registerTask('lint', ['jshint', 'compliment']);
-  grunt.registerTask('fastBuild', ['clean', 'browserify', 'hash', 'buildIndex', 'jshint']);
+  grunt.registerTask('fastBuild', ['clean', 'browserify', 'hash', 'buildIndexDev', 'jshint']);
   grunt.registerTask('watching', ['fastBuild', 'jasmine_node', 'jshint', 'lintStrings']);
 
   grunt.registerTask('default', ['build']);
   grunt.registerTask('test', ['jasmine_node']);
+  grunt.registerTask('casperTest', ['shell:casperTest']);
 };
 

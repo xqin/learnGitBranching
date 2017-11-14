@@ -10,18 +10,26 @@ exports.level = {
     "zh_CN": "Git push 的参数",
     "zh_TW": "git push 的參數",
     "es_AR": "Parámetros de git push",
+    "pt_BR": "Parâmetros do git push",
     "de_DE": "Optionen für Git Push",
     "ja"   : "Git pushの引数",
-    "fr_FR": "Paramètres de git push"
+    "fr_FR": "Arguments de git push",
+    "ru_RU": "Аргументы git push",
+    "ko"   : "git push의 인자들",
+    "uk"   : "Аргументи git push"
   },
   "hint": {
     "en_US": "You can always look at the last slide of the dialog with \"objective\"",
-    "zh_CN": "你可以利用 \"objective\" 来阅读对话窗口的最后一页",
+    "zh_CN": "你可以利用“objective”来阅读对话窗口的最后一页",
     "zh_TW": "你可以利用 \"objective\" 來閱讀對話視窗的最後一頁",
     "es_AR": "Siempre podés ver el último mensaje tipeando \"objective\"",
+    "pt_BR": "Você sempre pode rever o último slide com o comando \"objective\"",
     "de_DE": "Du kannst dir die Zielsetzung des Levels immer wieder mit \"objective\" anzeigen lassen",
     "ja"   : "ダイアログの最後のスライドを参照するには\"objective\"を実行",
-    "fr_FR": "Vous pouvez toujours regarder le dernier slide des dialogues en tapant \"objective\"."
+    "fr_FR": "Vous pouvez toujours regarder le dernier slide des dialogues en tapant \"objective\".",
+    "ru_RU": "Вы всегда можете ознакомиться с последним слайдом, воспользовавшись \"objective\".",
+    "ko"   : "대화창의 마지막 슬라이드를 \"objective\"로 다시 볼 수 있습니다.",
+    "uk"   : "Завжди можна подивитися останній слайд діалогу за допомогою \"objective\""
   },
   "startDialog": {
     "en_US": {
@@ -32,7 +40,7 @@ exports.level = {
             "markdowns": [
               "## Push arguments",
               "",
-              "Great! Now that you know about remote tracking branches we can start to uncover some of mystery behind how git push, fetch, and pull work. We're going to tackle one command at a time but the concepts between them are very similar.",
+              "Great! Now that you know about remote tracking branches we can start to uncover some of the mystery behind how git push, fetch, and pull work. We're going to tackle one command at a time but the concepts between them are very similar.",
               "",
               "First we'll look at `git push`. You learned in the remote tracking lesson that git figured out the remote *and* the branch to push to by looking at the properties of the currently checked out branch (the remote that it \"tracks\"). This is the behavior with no arguments specified, but git push can optionally take arguments in the form of:",
               "",
@@ -90,7 +98,10 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "Ok, for this level let's update both `foo` and `master` on the remote. The twist is that `git checkout` is disabled for this level!"
+              "Ok, for this level let's update both `foo` and `master` on the remote. The twist is that `git checkout` is disabled for this level!",
+              "",
+              "*Note: The remote branches are labeled with `o/` prefixes because the full `origin/` label does not fit in our UI. Don't worry ",
+              "about this... simply use `origin` as the name of the remote like normal.*"
             ]
           }
         }
@@ -104,9 +115,9 @@ exports.level = {
             "markdowns": [
               "## Les arguments de push",
               "",
-              "Bien ! Maintenant que vous connaissez le suivi des branches, nous pouvons fouiller ce qui se cache derrière le fonctionnement de push, fetch, et pull. Nous allons aborder une commande à la fois, mais elles sontt très similaires.",
+              "Bien ! Maintenant que vous connaissez le suivi des branches, nous pouvons fouiller ce qui se cache derrière le fonctionnement de push, fetch, et pull. Nous allons aborder une commande à la fois, mais elles sont très similaires.",
               "",
-              "En premier lieu regardons `git push`. Vous avez appris dans la leçon sur le suivi des branches que git détermine le dépôt distant *et* la branche à envoyer en regardant les propriétés de la branche courante (i.e. la branche qu'elle \"suit\" -- track). C'est le comportement quand aucun argument n'est spécifié, mais git peut optionnellement prendre des arguments de la forme :",
+              "En premier lieu regardons `git push`. Vous avez appris dans la leçon sur le suivi des branches distantes que git détermine le dépôt distant *et* la branche à envoyer en regardant les propriétés de la branche courante (c'est à dire la branche distante que cette dernière \"suit\" -- track). C'est le comportement rencontré quand aucun argument n'est spécifié, mais git push accepte aussi des arguments de la forme :",
               "",
               "`git push <remote> <place>`",
               "",
@@ -118,17 +129,17 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "Quel est le paramètre `<place>`? Nous allons voir ces particularités bientôt, mais d'abord un exemple. Exécuter la commande :",
+              "Qu'est ce que ce paramètre `<place>` ? Avant de passer à l'explication, voyons d'abord un exemple. La commande suivante :",
               "",
               "`git push origin master`",
               "",
-              "translates to this in English:",
+              "peut se traduire en français par :",
               "",
-              "*Va dans la branche \"master\" de mon dépôt, récupère tous les commits, et ensuite va dans la branche distante \"master\" sur le dépôt nommé \"origin\". Cela place tous les commits manquants sur cette branche puis me notifie quand c'est terminé.*",
+              "*Va dans la branche \"master\" de mon dépôt, récupère tous les commits, et ensuite va dans la branche distante \"master\" sur le dépôt nommé \"origin\". Envoie tous les commits qui lui manquent sur cette branche distante puis préviens-moi quand c'est terminé.*",
               "",
-              "En spécifiant `master` comme argument \"place\", nous avons dit à git *d'où* les commits venaient et où ils *allaient*. C'est en fait \"l'emplacment\" à synchroniser entre les deux dépôts.",
+              "En spécifiant `master` comme argument `<place>`, nous avons dit à git *d'où* les commits venaient et où ils *allaient*. C'est en fait \"l'emplacement\" à synchroniser entre les deux dépôts.",
               "",
-              "Gardez à l'esprit que nous avons dit à git tout ce dont il a besoin (en précisant les deux arguments), il ignore totalement quelle est la branche courante !"
+              "Gardez à l'esprit que nous avons dit à git tout ce dont il a besoin pour opérer (en précisant les deux arguments), il n'a donc absolument pas besoin de savoir quelle est la branche courante !"
             ]
           }
         },
@@ -136,10 +147,10 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "Voyons un exemple d'arguments. Notez la branche courante dans cet exemple."
+              "Voyons un exemple d'arguments. Notez bien où se trouve `HEAD` dans cet exemple."
             ],
             "afterMarkdowns": [
-              "Voilà ! `master` a été mise à joure puisque nous avons spécifié ces arguments."
+              "Voilà ! `master` a été mise à jour puisque nous avons spécifié ces arguments."
             ],
             "command": "git checkout C0; git push origin master",
             "beforeCommand": "git clone; git commit"
@@ -240,6 +251,78 @@ exports.level = {
         }
       ]
     },
+    "pt_BR": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Parâmetros do push",
+              "",
+              "Ótimo! Agora que você sabe sobre remote tracking de ramos, podemos começar a revelar um pouco do mistério por trás de como o push, o fetch e o pull funcionam. Vamos lidar com um comando por vez, mas os conceitos são bastante similares.",
+              "",
+              "Primeiro, vamos abordar o `git push`. Você aprendeu na lição sobre remote tracking que o Git descobria o repositório remoto *e* o ramo correspondente onde fazer o push olhando nas propriedades do ramo que está atualmente em checkout (verificando o ramo remoto que ele \"segue\"). Este é o comportamento quando nenhum parâmetro é especificado, mas o git push pode opcionalmente receber parâmetros na seguinte forma:",
+              "",
+              "`git push <repositório remoto> <lugar>`",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Você deve estar se perguntando: o que é esse parâmetro `<lugar>`? Vamos discutir as especifidades em breve, mas vejamos primeiro um exemplo. Executar o comando:",
+              "",
+              "`git push origin master`",
+              "",
+              "pode ser traduzido para o seguinte em Português:",
+              "",
+              "*Vá ao ramo chamado \"master\" no meu repositório local, pegue todos os commits, então vá ao ramo \"master\" no repositório remoto chamado \"origin\". Coloque quaisquer commits que estiverem faltando nesse ramo, e então me diga quando estiver pronto.*",
+              "",
+              "Especificando `master` como parâmetro \"lugar\", dizemos ao Git de onde os commits *vão vir* e para onde os commits *irão*. É essencialmente o \"lugar\" onde sincronizar entre os dois repositórios.",
+              "",
+              "Tenha em mente que já que contamos ao Git tudo que ele precisa saber (especificando ambos os parâmetros), ele ignora totalmente o checkout atual!"
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Vejamos um exemplo especificando os argumentos. Preste atenção no commit que sofreu checkout neste exemplo."
+            ],
+            "afterMarkdowns": [
+              "Aqui vamos nós! O `master` foi atualizado no repositório remoto, já que especificamos os parâmetros."
+            ],
+            "command": "git checkout C0; git push origin master",
+            "beforeCommand": "git clone; git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "E se eu não especificasse parâmetros? O que aconteceria?"
+            ],
+            "afterMarkdowns": [
+              "O comando falha (como você pode ver), já que o `HEAD` não havia sofrido checkout para um ramo com propriedade de remote-tracking definida."
+            ],
+            "command": "git checkout C0; git push",
+            "beforeCommand": "git clone; git commit"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Ok, neste nível vamos atualizar tanto o `foo` como o `master` no repositório remoto. Porém desabilitamos o comando `git checkout` para dificultar um pouco a tarefa!"
+            ]
+          }
+        }
+      ]
+    },
     "zh_TW": {
       "childViews": [
         {
@@ -283,7 +366,7 @@ exports.level = {
               "讓我們來看一個有加上參數的例子，在這個例子中，要特別注意到我們所 checkout 的位置。"
             ],
             "afterMarkdowns": [
-              "我說的沒錯吧！因為我們加上了參數，所以在 remote 上的 `master` branch 更新了"
+              "我說的沒錯吧！因為我們加上了參數，所以在 remote 上的 `master` branch 更新了。"
             ],
             "command": "git checkout C0; git push origin master",
             "beforeCommand": "git clone; git commit"
@@ -312,17 +395,17 @@ exports.level = {
         }
       ]
     },
-   "zh_CN":{
+    "zh_CN":{
       "childViews": [
         {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "## Push 参数",
+              "## Git Push 的参数",
               "",
-              "好! 既然你知道了远端跟踪分支, 我们可以开始揭开隐藏在git push/pull/fetch背后的秘密. ",
+              "很好! 既然你知道了远程跟踪分支，我们可以开始揭开 git push、fetch 和 pull 的神秘面纱了。我们会逐个介绍这几个命令，它们在理念上是非常相似的。",
               "",
-              "首先看看`git push`, 在远端跟踪分支中, 你学到了git 会找出要push的目的地(通过查看检出的分支, 及分支关联到的跟踪分支). 这是无参数的行为, 不过我们也可以为push指定参数:",
+              "首先来看 `git push`。在远程跟踪课程中，你已经学到了 Git 是通过当前检出分支的属性来确定远程仓库以及要 push 的目的地的。这是未指定参数时的行为，我们可以为 push 指定参数，语法是：",
               "",
               "`git push <remote> <place>`",
               "",
@@ -334,15 +417,17 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "`<place>` 参数意味什么呢? 我们会深入其中的细节, 先看看例子, 这个命令是:",
+              "`<place>` 参数是什么意思呢？我们稍后会深入其中的细节, 先看看例子, 这个命令是:",
               "",
               "`git push origin master`",
               "",
-              "* 切到master分支, 然后抓取所有的提交, 再将新提交推送到远端的master分支!",
+              "把这个命令翻译过来就是：",
               "",
-              "通过指定`master`为<place>参数, 我们告诉git 提交来自于master, 要推送到远端的master. 这种使用方式基本上用于同步两仓库",
+              "*切到本地仓库中的“master”分支，获取所有的提交，再到远程仓库“origin”中找到“master”分支，将远程仓库中没有的提交记录都添加上去，搞定之后告诉我。*",
               "",
-              "谨记, 因为我们通过指定参数告诉了git 所有的事, git 就忽略了我们所检出的分支(转而直接使用参数指定的分支作为source/destination)"
+              "我们通过“place”参数来告诉 Git 提交记录来自于 master, 要推送到远程仓库中的 master。它实际就是要同步的两个仓库的位置。",
+              "",
+              "需要注意的是，因为我们通过指定参数告诉了 Git 所有它需要的信息, 所以它就忽略了我们所检出的分支的属性！"
             ]
           }
         },
@@ -350,10 +435,10 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "我们看看指定参数的例子. 注意下我们当前检出的位置."
+              "我们看看指定参数的例子。注意下我们当前检出的位置。"
             ],
             "afterMarkdowns": [
-              "好了! 通过指定参数, 远端的`master` 得到了更新"
+              "好了! 通过指定参数, 远程仓库中的 `master` 分支得到了更新。"
             ],
             "command": "git checkout C0; git push origin master",
             "beforeCommand": "git clone; git commit"
@@ -363,10 +448,10 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "不指定参数会发生什么呢?"
+              "如果不指定参数会发生什么呢?"
             ],
             "afterMarkdowns": [
-              "命令失败了! 因为我们所check out 的HEAD没有跟踪分支.  "
+              "命令失败了（正如你看到的，什么也没有发生）! 因为我们所检出的 HEAD 没有跟踪任何分支。"
             ],
             "command": "git checkout C0; git push",
             "beforeCommand": "git clone; git commit"
@@ -376,7 +461,10 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "本节, 我们要更新远端的`foo`和`master`, 在本节中`git checkout` 是被禁用的!"
+              "本关我们要更新远程仓库中的 `foo` 和 `master`, 但是 `git checkout` 被禁用了！",
+              "",
+              "*注意：远程分支使用 `o/` 开头是因为 `origin/` 对于 UI 来说太长了。不用太在意这个，直接用 `origin` 作为远程仓库的名称就可以了。*",
+              ""
             ]
           }
         }
@@ -449,6 +537,231 @@ exports.level = {
           "options": {
             "markdowns": [
               "Ok, in diesem Level lass und sowohl `foo` als auch `master` auf dem Remote aktualisieren. Um's spannender zu machen, ist `git checkout` in diesem Level deaktiviert."
+            ]
+          }
+        }
+      ]
+    },
+    "ru_RU": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Аргументы команды Push",
+              "",
+              "Отлично! Теперь, когда вы знаете, как следить за удалёнными ветками, мы можем начать изучение того, что скрыто под занавесом работы команд git push, fetch и pull. Мы будем рассматривать одну команду за другой, однако принципы у них очень схожи.",
+              "",
+              "Сперва взглянем на `git push`. В уроке, посвящённом слежению за удалённым репозиторием, вы узнали о том, что git находит удалённый репозиторий *и* ветку, в которую необходимо push-ить, благодаря свойствам текущей ветки, на которой мы находимся. Это так называемое поведение без аргументов, однако команда git push может быть также использована и с аргументами. Вид команды в данном случае:",
+              "",
+              "`git push <удалённый_репозиторий> <целевая_ветка>`",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Что за такой параметр `<целевая_ветка>`? Мы узнаем об этом через секунду, а пока что рассмотрим пример. Допустим, что мы выполняем такую команду:",
+              "",
+              "`git push origin master`",
+              "",
+              "дословный перевод с английского будет таким:",
+              "",
+              "*Перейди в ветку с именем \"master\" в моём локальном репозитории, возьми все коммиты и затем перейди на ветку \"master\" на удалённом репозитории \"origin.\". На эту удалённую ветку скопируй все отсутствующие коммиты, которые есть у меня, и скажи, когда ты закончишь.*",
+              "",
+              "Указывая `master` в качестве аргумента \"целевая_ветка\", мы тем самым говорим git-у откуда будут *приходить* и *уходить* наши коммиты. Аргумент \"целевая_ветка\" или \"местонахождение\" - это синхронизация между двумя репозиториями.",
+              "",
+              "Имейте в виду, что с тех пор, как мы сказали git-у всё, что ему необходимо (указав оба аргумента), ему - git-у - абсолютно всё равно, что вы зачекаутили до этого!"
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Давайте взглянем на пример, в котором указаны оба этих аргумента. Обратите внимание на местоположение, в котором мы находимся после чекаута."
+            ],
+            "afterMarkdowns": [
+              "Вот так! Мы обновили `master` на удалённом репозитории, принудительно указав аргументы в push."
+            ],
+            "command": "git checkout C0; git push origin master",
+            "beforeCommand": "git clone; git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "А что бы было, ели бы мы не указывали эти аргументы, при этом используя тот же алгоритм?"
+            ],
+            "afterMarkdowns": [
+              "Как вы видите, команда не выполнилась, так как `HEAD` потерялся и не находится на удалённо-отслеживаемой ветке."
+            ],
+            "command": "git checkout C0; git push",
+            "beforeCommand": "git clone; git commit"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Хорошо, для выполнения этого уровня давайте обновим обе ветки `foo` и `master` на удалённом репозитории. Фишка в том, что команда `git checkout` не доступна на этом уровне!",
+              "",
+              "*Замечание: Удалённые ветки помечены как `o/`, а не `origin/`. Дело в том, что полная метка не помещается на экране. Не волнуйтесь ",
+              "по этому поводу... просто используйте знакомый нам `origin` для обращения к удалённому репозиторию.*"
+            ]
+          }
+        }
+      ]
+    },
+    "ko": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Push의 인자들",
+              "",
+              "좋습니다! 여러분은 이제 원격 추적 브랜치도 알고 있기 때문에 이제 git push, fetch, pull이 어떻게 작동하는지에 관한 숨겨져있는 미스테리를 풀어나갈 준비가 되었습니다. 한번에 하나의 명령어를 알아보도록하겠는데 이것들이 가지고있는 컨셉은 아주 비슷해요.",
+              "",
+              "먼저 `git push`입니다. 여러분은 push를 하면 git이 push를 할 대상으로 원격저장소, 브랜치를 현재 작업중인 브랜치에 설정된 속성(\"추적\" 대상)을 통해 알아낸다는것을 이전 추적 레슨에서 배웠습니다. 이것은 인자를 넣지않고 실행할 때 일어나는것 입니다, 그런데 git push에 다음과 같은 형식으로 선택적으로 인자를 사용할수도 있습니다:",
+              "",
+              "`git push <remote> <place>`",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "`<place>`인자가 무엇을 의미할것 같나요? 세부사항은 알아보기 전에 예시부터 봅시다. 다음 명령어를 보세요:",
+              "",
+              "`git push origin master`",
+              "",
+              "해석해 보면:",
+              "",
+              "*내 저장소에 있는 \"master\"라는 이름의 브랜치로 가서 모든 커밋들을 수집합니다, 그다음 \"origin\"의 \"master\"브랜치로 가서 이 브랜치에 부족한 커밋들을 채워 넣고 완료 되면 알려줍니다.*",
+              "",
+              "`master`를 \"place\"인자로 지정해서 우리가 git에게 *어디서부터* 커밋이 오는지, 그리고 *어디로* 커밋이 가야하는지 알려줍니다. 두 저장소간에 동기화 작업을 할 \"장소\"를 지정해 주는것이라고 볼 수 있습니다.",
+              "",
+              "git이 알아야 할 것은 다 알려줬기 때문에(두 인자를 모두 지정했죠), git은 현재 우리가 체크아웃한 브랜치는 무시하고 명령을 수행합니다."
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "인자를 지정해주는 예제를 눈으로 직접 확인해 봅시다. 이 예제에서 우리가 체크아웃한 곳이 어디인지를 주의하며 봅시다."
+            ],
+            "afterMarkdowns": [
+              "됬네요! 지정해준 인자들에 의해 원격 저장소의 `master`가 갱신 되었습니다."
+            ],
+            "command": "git checkout C0; git push origin master",
+            "beforeCommand": "git clone; git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "인자를 지정하지 않으면 어떻게 될까요?"
+            ],
+            "afterMarkdowns": [
+              "명령이 실패하며(보시다시피), `HEAD`가 원격저장소를 추적하는 브랜치에 체크아웃 되있지 않기 때문이죠."
+            ],
+            "command": "git checkout C0; git push",
+            "beforeCommand": "git clone; git commit"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "좋습니다, 이번 레벨에서는 원격저장소의 `foo`, `master`브랜치 모두 갱신해봅시다. 이번 문제는 `git checkout`이 비활성화 되있다는 점이 특징이죠!",
+              "",
+              "*노트: 원격 브랜치들은 `o/`접두어로 분류되어 있습니다. `origin/`으로 생략없이 표현하면 UI에 안맞아서 이렇게 표현했어요. ",
+              "그래서... 원격저장소 이름은 원래처럼 `origin`으로 써주세요.*"
+            ]
+          }
+        }
+      ]
+    },
+    "uk": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Аргумeнти git push",
+              "",
+              "Чудово! А зараз, коли ти знаєш все про відслідковування віддалених гілок, ми можемо розглянути \"магію\", що відбувається при git push, fetch, і pull. Ми розглянемо лише окремі команди для розуміння загального принципу.",
+              "",
+              "Спочатку розгляньмо `git push`. З уроку про відслідковування віддалених гілок ми знаємо, що git визначає куди і в *яку* гілку робити push, дивлячись на локальну поточну гілку (і віддалену, за якою вона \"слідкує\"). Це поведінка `push` без аргументів, але git push може приймати необов'язкові аргументи в форматі:",
+              "",
+              "`git push <remote> <place>`",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Ви спитаєте, що таке аргумент `<place>`? Ми скоро вдамося в детальні пояснення, але спочатку -- приклад. Виконання команди:",
+              "",
+              "`git push origin master`",
+              "",
+              "буквально перекладається як:",
+              "",
+              "*Піди в гілку, що називається \"master\" в моєму репозиторії, візьми всі коміти, піди у віддалений \"master\", що називається \"origin\". Додай ті коміти, яких немає в цій гілці і надрукуй, що саме ти зробив.*",
+              "",
+              "Вказуючи `master` в якості аргумента \"place\", ми сказали git-у, *звідки* взяти коміти і *куди* їх додати. (\"Place\") - фактично точка синхронізації двох репозиторіїв.",
+              "",
+              "Пам'ятайте, що оскільки ми надали git-у всю необхідну інформацію (вказавши обидва аргументи), не має значення яка гілка є зараз поточною!"
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Розгляньмо приклад використання аргументів. Зверніть увагу на поточну гілку в цьому прикладі."
+            ],
+            "afterMarkdowns": [
+              "Ось так! `master` у віддаленому репозиторії оновився, оскільки ми вказали його в аргументах."
+            ],
+            "command": "git checkout C0; git push origin master",
+            "beforeCommand": "git clone; git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "А якщо не вказувати аргументів? Що станеться?"
+            ],
+            "afterMarkdowns": [
+              "Команда поверне помилку (як можна побачити), оскільки локальний `HEAD` не співпадає з відповідною віддаленою гілкою."
+            ],
+            "command": "git checkout C0; git push",
+            "beforeCommand": "git clone; git commit"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Гаразд, на цьому рівні оновімо віддалені гілки `foo` і `master`. Для ускладнення ми заборонимо використовувати `git checkout`!",
+              "",
+              "*Пам'ятай, віддалені гілки позначені префіксом `o/`, оскільки повний префікс `origin/` не влазить в наш UI. Але не хвилюйся ",
+              "про це... ти можеш використовувати `origin` посилаючись на віддалений репозиторій.*"
             ]
           }
         }

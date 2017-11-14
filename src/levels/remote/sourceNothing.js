@@ -4,21 +4,29 @@ exports.level = {
   "startTree": "{\"branches\":{\"master\":{\"target\":\"C1\",\"id\":\"master\",\"remoteTrackingBranchID\":\"o/master\"},\"o/master\":{\"target\":\"C1\",\"id\":\"o/master\",\"remoteTrackingBranchID\":null},\"o/foo\":{\"target\":\"C1\",\"id\":\"o/foo\",\"remoteTrackingBranchID\":null}},\"commits\":{\"C0\":{\"parents\":[],\"id\":\"C0\",\"rootCommit\":true},\"C1\":{\"parents\":[\"C0\"],\"id\":\"C1\"}},\"HEAD\":{\"target\":\"master\",\"id\":\"HEAD\"},\"originTree\":{\"branches\":{\"master\":{\"target\":\"C1\",\"id\":\"master\",\"remoteTrackingBranchID\":null},\"foo\":{\"target\":\"C1\",\"id\":\"foo\",\"remoteTrackingBranchID\":null}},\"commits\":{\"C0\":{\"parents\":[],\"id\":\"C0\",\"rootCommit\":true},\"C1\":{\"parents\":[\"C0\"],\"id\":\"C1\"}},\"HEAD\":{\"target\":\"master\",\"id\":\"HEAD\"}}}",
   "name": {
     "en_US": "Source of nothing",
-    "zh_CN": "没有 source",
+    "zh_CN": "没有 source 的 source",
     "zh_TW": "沒有 source",
     "es_AR": "Origen de nada",
+    "pt_BR": "Origem vazia",
     "de_DE": "Die Quelle des Nichts",
     "ja"   : "無のsource",
-    "fr_FR": "Source de rien du tout"
+    "fr_FR": "Source de rien du tout",
+    "ru_RU": "Пустой источник",
+    "ko"   : "Source가 없다",
+    "uk"   : "Нема джерела"
   },
   "hint": {
     "en_US": "The branch command is disabled for this level so you'll have to use fetch!",
-    "zh_CN": "本节的 branch 命令被禁用了, 你只能使用 fetch! ",
+    "zh_CN": "本关的 branch 命令被禁用了，你只能用 fetch！",
     "zh_TW": "在本關卡中，不允許使用 branch 指令，因此你只能使用 fetch！",
     "es_AR": "El comando branch está deshabilitado para este nivel, así que ¡vas a tener que usar fetch!",
+    "pt_BR": "O comando branch está desabilitado para este nível, então você terá de usar o fetch!",
     "de_DE": "Der branch Befehl ist für diesen Level inaktiv, du musst also fetch benutzen",
     "ja"   : "このレベルではbranchコマンドが無効になっているのでfetchを使うしかない！",
-    "fr_FR": "La commande branch est désactivée pour ce niveau, vous devrez donc utiliser fetch !"
+    "fr_FR": "La commande branch est désactivée pour ce niveau, vous devrez donc utiliser fetch !",
+    "ru_RU": "Команда branch недоступна на этом упражнении, пользуйтесь командой fetch!",
+    "ko"   : "branch 명령이 비활성화 되어있습니다. fetch를 사용해야 되요!",
+    "uk"   : "Команда branch недоступна на цьому уроці, користуйся командою fetch!",
   },
   "startDialog": {
     "en_US": {
@@ -82,7 +90,7 @@ exports.level = {
             "markdowns": [
               "### Les bizarreries de `<source>`",
               "",
-              "Git maltraite le paramètre `<source>` parameter de deux façons bizarres. Ces deux abus viennent du fait que vous pouvez techniquement ne \"rien spécifier commre `source` valide pour git push et git fetch. Le moyen de ne rien spécifier est un argument vide :",
+              "Git permet de faire deux choses contre-intuitives avec le paramètre `<source>`. Ces deux astuces viennent du fait que vous pouvez techniquement ne *rien* spécifier comme `source` valide pour git push et git fetch. Autrement dit laisser vide la partie gauche de la refspec (avant le deux-points) :",
               "",
               "* `git push origin :side`",
               "* `git fetch origin :bugFix`",
@@ -98,7 +106,7 @@ exports.level = {
               "Qu'est-ce que produit l'envoi de \"rien\" sur une branche distante ? Cela la détruit !"
             ],
             "afterMarkdowns": [
-              "Ici, nous avons brillamment supprimé  la branche `foo` du dépôt distant en lui envoyant le concept de \"rien\". Cela prend du sens ..."
+              "Ici, nous avons brillamment supprimé  la branche `foo` du dépôt distant en lui envoyant le concept de \"rien\". Cela paraît à peu près logique..."
             ],
             "command": "git push origin :foo",
             "beforeCommand": "git clone; git push origin master:foo"
@@ -108,7 +116,7 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "Enfin, un fetch de \"rien\" dans un emplacement local crée une nouvelle branche"
+              "Ensuite, un fetch de \"rien\" dans un emplacement local crée une nouvelle branche."
             ],
             "afterMarkdowns": [
               "Très étrange, mais peu importe. C'est git !"
@@ -121,7 +129,7 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "C'est un petit niveau -- supprimez simplement une branche distante et faites-en une nouvelle (locale) avec `git fetch` pour terminer !"
+              "L'exercice pour ce niveau est simple : supprimez d'abord une branche distante puis terminez en en créant une nouvelle (locale) avec `git fetch` !"
             ]
           }
         }
@@ -180,6 +188,59 @@ exports.level = {
         }
       ]
     },
+    "pt_BR": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "### Coisas estranhas do `<origem>`",
+              "",
+              "O Git abusa do parâmetro `<origem>` de duas formas estranhas. Esses dois abusos vem do fato de que tecnicamente você pode especificar \"nada\" como uma `origem` válida tanto para o git push como para o git fetch. A forma como você especifica \"nada\" é por meio de um argumento vazio:",
+              "",
+              "* `git push origin :side`",
+              "* `git fetch origin :bugFix`",
+              "",
+              "Vejamos o que esses comandos fazem..."
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "O que fazer push de \"coisa nenhuma\" para um ramo remoto significa? Deletar o ramo!"
+            ],
+            "afterMarkdowns": [
+              "Aqui, excluímos com sucesso o ramo `foo` do repositório remoto por meio de um push de \"coisa nenhuma\" direcionado a ele. Até que faz sentido..."
+            ],
+            "command": "git push origin :foo",
+            "beforeCommand": "git clone; git push origin master:foo"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Finalmente, fazer um fetch de \"coisa nenhuma\" para uma referência local cria um novo ramo"
+            ],
+            "afterMarkdowns": [
+              "Bastante estranho / bizarro, mas de qualquer forma. É assim que o Git é!"
+            ],
+            "command": "git fetch origin :bar",
+            "beforeCommand": "git clone"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Este é um nível rápido de resolver -- basta remover um ramo remoto com `git push` e criar um novo ramo local com `git fetch` para terminar!"
+            ]
+          }
+        }
+      ]
+    },
     "zh_TW": {
       "childViews": [
         {
@@ -233,20 +294,20 @@ exports.level = {
         }
       ]
     },
-   "zh_CN":{
+    "zh_CN":{
       "childViews": [
         {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "### 奇葩的`<source>`",
+              "### 古怪的 `<source>`",
               "",
-              "有两种罕见的情况, git 不需要 `<source>`. 这基于这样一个事实-- 技术上说就是你不指定<source>. 这是通过空参数实现的",
+              "Git 有两种关于 `<source>` 的用法是比较诡异的，即你可以在 git push 或 git fetch 时不指定任何 `source`，方法就是仅保留冒号和 destination 部分，source 部分留空。",
               "",
               "* `git push origin :side`",
               "* `git fetch origin :bugFix`",
               "",
-              "我们看看这是怎么进行的..."
+              "我们分别来看一下这两条命令的作用……"
             ]
           }
         },
@@ -254,10 +315,10 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "如果给push传一个空参数会如何呢? 远端会删除分支! "
+              "如果 push 空 <source> 到远程仓库会如何呢？它会删除远程仓库中的分支！"
             ],
             "afterMarkdowns": [
-              "就是这样子, 我们通过给push传空值source, 成功删除了远端的`foo`分支, 这真有意思..."
+              "就是这样子, 我们通过给 push 传空值 source，成功删除了远程仓库中的 `foo` 分支, 这真有意思..."
             ],
             "command": "git push origin :foo",
             "beforeCommand": "git clone; git push origin master:foo"
@@ -267,10 +328,10 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "如果给fetch传空<source>, 那本地会创建一个新分支."
+              "如果 fetch 空 <source> 到本地，会在本地创建一个新分支。"
             ],
             "afterMarkdowns": [
-              "很神奇吧! 但无论怎么说, 这就是git !"
+              "很神奇吧！但无论怎么说, 这就是 Git！"
             ],
             "command": "git fetch origin :bar",
             "beforeCommand": "git clone"
@@ -280,7 +341,7 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "快速测试 -- 删除远端的分支, 再在本地创建新的分支! "
+              "这个关卡很容易 —— 只要删除一个远程的分支, 再用 `git fetch` 在本地创建一个新分支就可以了！"
             ]
           }
         }
@@ -334,6 +395,165 @@ exports.level = {
           "options": {
             "markdowns": [
               "Das ist ein kurzer Level -- lösch einfach den Remote Branch und erstelle einen neuen Branch mit `git fetch`, um ihn zu lösen."
+            ]
+          }
+        }
+      ]
+    },
+    "ru_RU": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "### Странный `<источник>`",
+              "",
+              "Git использует параметр `<источник>` странным образом. Странность заключается в том, что Вы можете оставить пустым параметр `<источник>` для команд git push и git fetch:",
+              "",
+              "* `git push origin :side`",
+              "* `git fetch origin :bugFix`",
+              "",
+              "Посмотрим, что же из этого выйдет..."
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Что же будет с веткой, на которую мы делаем git push с пустым аргументом `<источник>`? Она будет удалена!"
+            ],
+            "afterMarkdowns": [
+              "Как видите, мы удалили ветку `foo` в удаленном репозитории, попытавшить протолкнуть(git push) в неё \"ничего\"."
+            ],
+            "command": "git push origin :foo",
+            "beforeCommand": "git clone; git push origin master:foo"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Наконец, если мы попытаемся притянуть изменения(git fetch) из \"ничего\" к нам в локальный репозиторий, то это создаст у нас новую ветку"
+            ],
+            "afterMarkdowns": [
+              "Вот такой вот чудной git!"
+            ],
+            "command": "git fetch origin :bar",
+            "beforeCommand": "git clone"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Это легкое упражнение - нужно всего лишь удалить одну ветку в удаленном репозитории и создать новую ветку в локальном, с помощью команд `git push` и `git fetch` соответственно!"
+            ]
+          }
+        }
+      ]
+    },
+    "ko": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "###`<source>`의 이상함",
+              "",
+              "Git은 `<source>` 인자를 두가지 방법으로 이상하게 사용합니다. 이 두가지 오용은 여러분이 git push와 git fetch에 `source`에 \"없음\"을 지정할 수 있기 때문에 나타납니다. \"없음\"을 지정하는 방법은 인자로 아무것도 안쓰면 됩니다:",
+              "",
+              "* `git push origin :side`",
+              "* `git fetch origin :bugFix`",
+              "",
+              "위에 처럼 말이죠, 뭘 할 수 있는지 확인해봅시다..."
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "\"없음\"을 원격 브랜치로 push하면 무엇을 할까요? 원격저장소의 그 브랜치를 삭제합니다!"
+            ],
+            "afterMarkdowns": [
+              "됬습니다, 원격 저장소의 `foo`브랜치를 성공적으로 삭제했습니다. \"없음\"을 push한다는것이 이것을 이뤘습니다. 흠 말이 되는것 같네요 null을 push했어요..."
+            ],
+            "command": "git push origin :foo",
+            "beforeCommand": "git clone; git push origin master:foo"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "마지막으로, \"nothing\"을 fetch하면 로컬에 새 브랜치를 만듭니다"
+            ],
+            "afterMarkdowns": [
+              "기괴합니다... 뭐어때요. git이 이런데요 뭐!"
+            ],
+            "command": "git fetch origin :bar",
+            "beforeCommand": "git clone"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "이번 레벨은 금방 넘어가는 레벨입니다 -- 원격저장소의 브랜치하나를 삭제하고 `git fetch`를 이요해서 새 브랜치를 만들어보세요!"
+            ]
+          }
+        }
+      ]
+    },
+    "uk": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "### Неочевидні способи використання `<source>`",
+              "",
+              "Git має два хитрі способи використання `<source>`. Обидва випливають з факту, що формально (і цілком легально) ти можеш не вказувати джерело (`source`) як для git push так і для git fetch. Ось, як саме ти можеш це зробити:",
+              "",
+              "* `git push origin :side`",
+              "* `git fetch origin :bugFix`",
+              "",
+              "Погляньмо, що в результаті вийде..."
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Що буде, якщо спробувати запушити \"ніщо\" у гілку віддаленого репозиторію? Git її видалить!"
+            ],
+            "afterMarkdowns": [
+              "Ось, ми успішно видалили гілку `foo` на віддаленому сервері, запушивши в неї \"ніщо\". Ну, ніби все правильно..."
+            ],
+            "command": "git push origin :foo",
+            "beforeCommand": "git clone; git push origin master:foo"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "І останнє, звантаження \"нічого\" в локальний репозиторій створює нову гілку"
+            ],
+            "afterMarkdowns": [
+              "Дуже дивно, але такий він, git!"
+            ],
+            "command": "git fetch origin :bar",
+            "beforeCommand": "git clone"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Це швидкий рівень -- просто видали одну віддалену гілку і створи нову локальну гілку, використовуючи `git fetch`!"
             ]
           }
         }

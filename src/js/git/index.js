@@ -1,6 +1,5 @@
 var _ = require('underscore');
-// horrible hack to get localStorage Backbone plugin
-var Backbone = (!require('../util').isBrowser()) ? Backbone = require('backbone') : Backbone = window.Backbone;
+var Backbone = require('backbone');
 var Q = require('q');
 
 var intl = require('../intl');
@@ -15,7 +14,6 @@ var Main = require('../app');
 var Commands = require('../commands');
 var GitError = Errors.GitError;
 var CommandResult = Errors.CommandResult;
-var EventBaton = require('../util/eventBaton').EventBaton;
 
 var ORIGIN_PREFIX = 'o/';
 var TAB = '&nbsp;&nbsp;&nbsp;';
@@ -52,7 +50,7 @@ function GitEngine(options) {
 }
 
 GitEngine.prototype.initUniqueID = function() {
-  // backbone or something uses _.uniqueId, so we make our own here
+  // backbone or something uses _ .uniqueId, so we make our own here
   this.uniqueId = (function() {
     var n = 0;
     return function(prepend) {
@@ -104,18 +102,18 @@ GitEngine.prototype.setMode = function(vcs) {
   // branching ahead...
   var neededUpdate = this.updateAllBranchesForHg();
   if (neededUpdate) {
-    chain = chain.then(_.bind(function() {
+    chain = chain.then(function() {
       return this.animationFactory.playRefreshAnimationSlow(this.gitVisuals);
-    }, this));
+    }.bind(this));
 
     // ok we need to refresh anyways, so do the prune after
-    chain = chain.then(_.bind(function() {
+    chain = chain.then(function() {
       var neededPrune = this.pruneTree();
       if (!neededPrune) {
         return;
       }
       return this.animationFactory.playRefreshAnimation(this.gitVisuals);
-    }, this));
+    }.bind(this));
 
     return chain;
   }
@@ -609,8 +607,15 @@ GitEngine.prototype.getDetachedHead = function() {
 };
 
 GitEngine.prototype.validateBranchName = function(name) {
+  // Lets escape some of the nasty characters
+  name = name.replace(/&#x2F;/g,"\/");
   name = name.replace(/\s/g, '');
-  if (!/^[a-zA-Z0-9]+$/.test(name)) {
+  // And then just make sure it starts with alpha-numeric,
+  // can contain a slash or dash, and then ends with alpha
+  if (
+    !/^(\w+[.\/\-]?)+\w+$/.test(name) ||
+    name.search('o/') === 0
+  ) {
     throw new GitError({
       msg: intl.str(
         'bad-branch-name',
@@ -797,7 +802,7 @@ GitEngine.prototype.printRemotes = function(options) {
 GitEngine.prototype.getUniqueID = function() {
   var id = this.uniqueId('C');
 
-  var hasID = _.bind(function(idToCheck) {
+  var hasID = function(idToCheck) {
     // loop through and see if we have it locally or
     // remotely
     if (this.refs[idToCheck]) {
@@ -807,7 +812,7 @@ GitEngine.prototype.getUniqueID = function() {
       return true;
     }
     return false;
-  }, this);
+  }.bind(this);
 
   while (hasID(id)) {
     id = this.uniqueId('C');
@@ -854,7 +859,7 @@ GitEngine.prototype.revert = function(whichCommits) {
 
   var base = this.getCommitFromRef('HEAD');
   // each step makes a new commit
-  var chainStep = _.bind(function(oldCommit) {
+  var chainStep = function(oldCommit) {
     var newId = this.rebaseAltID(oldCommit.get('id'));
     var commitMessage = intl.str('git-revert-msg', {
       oldCommit: this.resolveName(oldCommit),
@@ -869,7 +874,7 @@ GitEngine.prototype.revert = function(whichCommits) {
       newCommit,
       this.gitVisuals
     );
-  }, this);
+  }.bind(this);
 
   // set up the promise chain
   _.each(toRevert, function(commit) {
@@ -879,10 +884,10 @@ GitEngine.prototype.revert = function(whichCommits) {
   }, this);
 
   // done! update our location
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     this.setTargetLocation('HEAD', base);
     return this.animationFactory.playRefreshAnimation(this.gitVisuals);
-  }, this));
+  }.bind(this));
 
   this.animationQueue.thenFinish(chain, deferred);
 };
@@ -903,13 +908,13 @@ GitEngine.prototype.setupCherrypickChain = function(toCherrypick) {
     destinationBranch
   );
 
-  var chainStep = _.bind(function(commit) {
+  var chainStep = function(commit) {
     var newCommit = this.cherrypick(commit);
     return this.animationFactory.playCommitBirthPromiseAnimation(
       newCommit,
       this.gitVisuals
     );
-  }, this);
+  }.bind(this);
 
   _.each(toCherrypick, function(arg) {
     chain = chain.then(function() {
@@ -1047,6 +1052,12 @@ GitEngine.prototype.push = function(options) {
   }
 
   var sourceBranch = this.refs[options.source];
+  if (sourceBranch && sourceBranch.attributes.type === 'tag') {
+    throw new GitError({
+      msg: intl.todo('Tags are not allowed as sources for pushing'),
+    });
+  }
+
   if (!this.origin.refs[options.destination]) {
     this.makeBranchOnOriginAndTrack(
       options.destination,
@@ -1076,8 +1087,31 @@ GitEngine.prototype.push = function(options) {
     this.origin,
     this,
     branchOnRemote,
-    sourceLocation
+    sourceLocation,
+    /* options */ {
+      dontThrowOnNoFetch: true,
+    }
   );
+  if (!commitsToMake.length) {
+    if (!options.force) {
+      // We are already up to date, and we cant be deleting
+      // either since we dont have --force
+      throw new GitError({
+        msg: intl.str('git-error-origin-fetch-uptodate')
+      });
+    } else {
+      var sourceCommit = this.getCommitFromRef(sourceBranch);
+      var originCommit = this.getCommitFromRef(branchOnRemote);
+      if (sourceCommit.id === originCommit.id) {
+        // This is essentially also being up to date
+        throw new GitError({
+          msg: intl.str('git-error-origin-fetch-uptodate')
+        });
+      }
+      // Otherwise fall through! We will update origin
+      // and essentially delete the commit
+    }
+  }
 
   // now here is the tricky part -- the difference between local master
   // and remote master might be commits C2, C3, and C4, but the remote
@@ -1087,34 +1121,34 @@ GitEngine.prototype.push = function(options) {
     return !this.origin.refs[commitJSON.id];
   }, this);
 
-  var makeCommit = _.bind(function(id, parentIDs) {
+  var makeCommit = function(id, parentIDs) {
     // need to get the parents first. since we order by depth, we know
     // the dependencies are there already
     var parents = _.map(parentIDs, function(parentID) {
       return this.origin.refs[parentID];
     }, this);
     return this.origin.makeCommit(parents, id);
-  }, this);
+  }.bind(this);
 
   // now make the promise chain to make each commit
-  var chainStep = _.bind(function(id, parents) {
+  var chainStep = function(id, parents) {
     var newCommit = makeCommit(id, parents);
     return this.animationFactory.playCommitBirthPromiseAnimation(
       newCommit,
       this.origin.gitVisuals
     );
-  }, this);
+  }.bind(this);
 
   var deferred = Q.defer();
   var chain = deferred.promise;
 
   _.each(commitsToMake, function(commitJSON) {
-    chain = chain.then(_.bind(function() {
+    chain = chain.then(function() {
       return this.animationFactory.playHighlightPromiseAnimation(
         this.refs[commitJSON.id],
         branchOnRemote
       );
-    }, this));
+    }.bind(this));
 
     chain = chain.then(function() {
       return chainStep(
@@ -1124,21 +1158,21 @@ GitEngine.prototype.push = function(options) {
     });
   }, this);
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     var localLocationID = this.getCommitFromRef(sourceLocation).get('id');
     var remoteCommit = this.origin.refs[localLocationID];
     this.origin.setTargetLocation(branchOnRemote, remoteCommit);
     // unhighlight local
     this.animationFactory.playRefreshAnimation(this.gitVisuals);
     return this.animationFactory.playRefreshAnimation(this.origin.gitVisuals);
-  }, this));
+  }.bind(this));
 
   // HAX HAX update master and remote tracking for master
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     var localCommit = this.getCommitFromRef(sourceLocation);
     this.setTargetLocation(this.refs[ORIGIN_PREFIX + options.destination], localCommit);
     return this.animationFactory.playRefreshAnimation(this.gitVisuals);
-  }, this));
+  }.bind(this));
 
   if (!options.dontResolvePromise) {
     this.animationQueue.thenFinish(chain, deferred);
@@ -1261,31 +1295,31 @@ GitEngine.prototype.fetchCore = function(sourceDestPairs, options) {
     return !this.refs[commitJSON.id];
   }, this);
 
-  var makeCommit = _.bind(function(id, parentIDs) {
+  var makeCommit = function(id, parentIDs) {
     // need to get the parents first. since we order by depth, we know
     // the dependencies are there already
     var parents = _.map(parentIDs, function(parentID) {
       return this.refs[parentID];
     }, this);
     return this.makeCommit(parents, id);
-  }, this);
+  }.bind(this);
 
   // now make the promise chain to make each commit
-  var chainStep = _.bind(function(id, parents) {
+  var chainStep = function(id, parents) {
     var newCommit = makeCommit(id, parents);
     return this.animationFactory.playCommitBirthPromiseAnimation(
       newCommit,
       this.gitVisuals
     );
-  }, this);
+  }.bind(this);
 
   var deferred = Q.defer();
   var chain = deferred.promise;
   if (options.didMakeBranch) {
-    chain = chain.then(_.bind(function() {
+    chain = chain.then(function() {
       this.animationFactory.playRefreshAnimation(this.origin.gitVisuals);
       return this.animationFactory.playRefreshAnimation(this.gitVisuals);
-    }, this));
+    }.bind(this));
   }
 
   var originBranchSet = this.origin.getUpstreamBranchSet();
@@ -1295,12 +1329,12 @@ GitEngine.prototype.fetchCore = function(sourceDestPairs, options) {
     var originBranch = originBranchSet[commitJSON.id][0].obj;
     var localBranch = this.refs[originBranch.getPrefixedID()];
 
-    chain = chain.then(_.bind(function() {
+    chain = chain.then(function() {
       return this.animationFactory.playHighlightPromiseAnimation(
         this.origin.refs[commitJSON.id],
         localBranch
       );
-    }, this));
+    }.bind(this));
 
     chain = chain.then(function() {
       return chainStep(
@@ -1310,7 +1344,7 @@ GitEngine.prototype.fetchCore = function(sourceDestPairs, options) {
     });
   }, this);
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     // update all the destinations
     _.each(sourceDestPairs, function(pair) {
       var ours = this.refs[pair.destination];
@@ -1324,7 +1358,7 @@ GitEngine.prototype.fetchCore = function(sourceDestPairs, options) {
     // unhighlight origin by refreshing
     this.animationFactory.playRefreshAnimation(this.origin.gitVisuals);
     return this.animationFactory.playRefreshAnimation(this.gitVisuals);
-  }, this));
+  }.bind(this));
 
   if (!options.dontResolvePromise) {
     this.animationQueue.thenFinish(chain, deferred);
@@ -1368,40 +1402,47 @@ GitEngine.prototype.pullFinishWithRebase = function(
 ) {
   var chain = pendingFetch.chain;
   var deferred = pendingFetch.deferred;
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     if (this.isUpstreamOf(remoteBranch, localBranch)) {
       this.command.set('error', new CommandResult({
         msg: intl.str('git-result-uptodate')
       }));
       throw SHORT_CIRCUIT_CHAIN;
     }
-  }, this));
+  }.bind(this));
 
   // delay a bit after the intense refresh animation from
   // fetch
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     return this.animationFactory.getDelayedPromise(300);
-  }, this));
+  }.bind(this));
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     // highlight last commit on o/master to color of
     // local branch
     return this.animationFactory.playHighlightPromiseAnimation(
       this.getCommitFromRef(remoteBranch),
       localBranch
     );
-  }, this));
+  }.bind(this));
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     pendingFetch.dontResolvePromise = true;
+
+    // Lets move the git pull --rebase check up here.
+    if (this.isUpstreamOf(localBranch, remoteBranch)) {
+      this.setTargetLocation(
+        localBranch,
+        this.getCommitFromRef(remoteBranch)
+      );
+      this.checkout(localBranch);
+      return this.animationFactory.playRefreshAnimation(this.gitVisuals);
+    }
 
     try {
       return this.rebase(remoteBranch, localBranch, pendingFetch);
     } catch (err) {
       this.filterError(err);
-      // we make one exception here to match the behavior of
-      // git pull --rebase. If the rebase is empty we just
-      // simply checkout the new location
       if (err.getMsg() !== intl.str('git-error-rebase-none')) {
         throw err;
       }
@@ -1412,7 +1453,7 @@ GitEngine.prototype.pullFinishWithRebase = function(
       this.checkout(localBranch);
       return this.animationFactory.playRefreshAnimation(this.gitVisuals);
     }
-  }, this));
+  }.bind(this));
   chain = chain.fail(catchShortCircuit);
 
   this.animationQueue.thenFinish(chain, deferred);
@@ -1426,43 +1467,43 @@ GitEngine.prototype.pullFinishWithMerge = function(
   var chain = pendingFetch.chain;
   var deferred = pendingFetch.deferred;
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     if (this.mergeCheck(remoteBranch, localBranch)) {
       this.command.set('error', new CommandResult({
         msg: intl.str('git-result-uptodate')
       }));
       throw SHORT_CIRCUIT_CHAIN;
     }
-  }, this));
+  }.bind(this));
 
   // delay a bit after the intense refresh animation from
   // fetch
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     return this.animationFactory.getDelayedPromise(300);
-  }, this));
-  
-  chain = chain.then(_.bind(function() {
+  }.bind(this));
+
+  chain = chain.then(function() {
     // highlight last commit on o/master to color of
     // local branch
     return this.animationFactory.playHighlightPromiseAnimation(
       this.getCommitFromRef(remoteBranch),
       localBranch
     );
-  }, this));
+  }.bind(this));
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     // highlight commit on master to color of remote
     return this.animationFactory.playHighlightPromiseAnimation(
       this.getCommitFromRef(localBranch),
       remoteBranch
     );
-  }, this));
+  }.bind(this));
 
   // delay and merge
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     return this.animationFactory.getDelayedPromise(700);
-  }, this));
-  chain = chain.then(_.bind(function() {
+  }.bind(this));
+  chain = chain.then(function() {
     var newCommit = this.merge(remoteBranch);
     if (!newCommit) {
       // it is a fast forward
@@ -1473,25 +1514,25 @@ GitEngine.prototype.pullFinishWithMerge = function(
       newCommit,
       this.gitVisuals
     );
-  }, this));
+  }.bind(this));
   chain = chain.fail(catchShortCircuit);
 
   this.animationQueue.thenFinish(chain, deferred);
 };
 
 GitEngine.prototype.fakeTeamwork = function(numToMake, branch) {
-  var makeOriginCommit = _.bind(function() {
+  var makeOriginCommit = function() {
     var id = this.getUniqueID();
     return this.origin.receiveTeamwork(id, branch, this.animationQueue);
-  }, this);
+  }.bind(this);
 
-  var chainStep = _.bind(function() {
+  var chainStep = function() {
     var newCommit = makeOriginCommit();
     return this.animationFactory.playCommitBirthPromiseAnimation(
       newCommit,
       this.origin.gitVisuals
     );
-  }, this);
+  }.bind(this);
 
   var deferred = Q.defer();
   var chain = deferred.promise;
@@ -1528,7 +1569,7 @@ GitEngine.prototype.commit = function(options) {
   var targetCommit = this.getCommitFromRef(this.HEAD);
   var id = null;
 
-  // if we want to ammend, go one above
+  // if we want to amend, go one above
   if (options.isAmend) {
     targetCommit = this.resolveID('HEAD~1');
     id = this.rebaseAltID(this.getCommitFromRef('HEAD').get('id'));
@@ -2035,7 +2076,7 @@ GitEngine.prototype.hgRebase = function(destination, base) {
     return id;
   });
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     // now we just moved a bunch of commits, but we havent updated the
     // dangling guys. lets do that and then prune
     var anyChange = this.updateCommitParentsForHgRebase(masterSet);
@@ -2043,22 +2084,23 @@ GitEngine.prototype.hgRebase = function(destination, base) {
       return;
     }
     return this.animationFactory.playRefreshAnimationSlow(this.gitVisuals);
-  }, this));
+  }.bind(this));
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     return this.updateAllBranchesForHgAndPlay(branchList);
-  }, this));
+  }.bind(this));
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     // now that we have moved branches, lets prune
     return this.pruneTreeAndPlay();
-  }, this));
+  }.bind(this));
 
   this.animationQueue.thenFinish(chain, deferred);
 };
 
 GitEngine.prototype.rebase = function(targetSource, currentLocation, options) {
   // first some conditions
+  debugger;
   if (this.isUpstreamOf(targetSource, currentLocation)) {
     this.command.setResult(intl.str('git-result-uptodate'));
 
@@ -2108,7 +2150,7 @@ GitEngine.prototype.getUpstreamDiffFromSet = function(stopSet, location) {
 GitEngine.prototype.getInteractiveRebaseCommits = function(targetSource, currentLocation) {
   var stopSet = Graph.getUpstreamSet(this, targetSource);
   var toRebaseRough = [];
-  
+
   // standard BFS
   var pQueue = [this.getCommitFromRef(currentLocation)];
 
@@ -2131,28 +2173,28 @@ GitEngine.prototype.getInteractiveRebaseCommits = function(targetSource, current
       toRebase.push(commit);
     }
   });
-  
+
   if (!toRebase.length) {
     throw new GitError({
       msg: intl.str('git-error-rebase-none')
     });
   }
-  
+
   return toRebase;
 };
 
 GitEngine.prototype.rebaseInteractiveTest = function(targetSource, currentLocation, options) {
   options = options || {};
-  
+
   // Get the list of commits that would be displayed to the user
   var toRebase = this.getInteractiveRebaseCommits(targetSource, currentLocation);
-  
+
   var rebaseMap = {};
   _.each(toRebase, function(commit) {
     var id = commit.get('id');
     rebaseMap[id] = commit;
   });
-  
+
   var rebaseOrder;
   if (options['interactiveTest'].length === 0) {
     // If no commits were explicitly specified for the rebase, act like the user didn't change anything
@@ -2161,7 +2203,7 @@ GitEngine.prototype.rebaseInteractiveTest = function(targetSource, currentLocati
   } else {
     // Get the list and order of commits specified
     var idsToRebase = options['interactiveTest'][0].split(',');
-    
+
     // Verify each chosen commit exists in the list of commits given to the user
     var extraCommits = [];
     rebaseOrder = [];
@@ -2172,20 +2214,20 @@ GitEngine.prototype.rebaseInteractiveTest = function(targetSource, currentLocati
         extraCommits.push(id);
       }
     });
-    
+
     if (extraCommits.length > 0) {
       throw new GitError({
         msg: intl.todo('Hey those commits dont exist in the set!')
       });
     }
   }
-  
+
   this.rebaseFinish(rebaseOrder, {}, targetSource, currentLocation);
 };
 
 GitEngine.prototype.rebaseInteractive = function(targetSource, currentLocation, options) {
   options = options || {};
-  
+
   // there are a reduced set of checks now, so we can't exactly use parts of the rebase function
   // but it will look similar.
   var toRebase = this.getInteractiveRebaseCommits(targetSource, currentLocation);
@@ -2196,7 +2238,7 @@ GitEngine.prototype.rebaseInteractive = function(targetSource, currentLocation, 
 
   var deferred = Q.defer();
   deferred.promise
-  .then(_.bind(function(userSpecifiedRebase) {
+  .then(function(userSpecifiedRebase) {
     // first, they might have dropped everything (annoying)
     if (!userSpecifiedRebase.length) {
       throw new CommandResult({
@@ -2206,14 +2248,14 @@ GitEngine.prototype.rebaseInteractive = function(targetSource, currentLocation, 
 
     // finish the rebase crap and animate!
     this.rebaseFinish(userSpecifiedRebase, {}, targetSource, currentLocation);
-  }, this))
-  .fail(_.bind(function(err) {
+  }.bind(this))
+  .fail(function(err) {
     this.filterError(err);
     this.command.set('error', err);
     this.animationQueue.start();
-  }, this))
+  }.bind(this))
   .done();
-  
+
   // If we have a solution provided, set up the GUI to display it by default
   var initialCommitOrdering;
   if (options.initialCommitOrdering && options.initialCommitOrdering.length > 0) {
@@ -2221,7 +2263,7 @@ GitEngine.prototype.rebaseInteractive = function(targetSource, currentLocation, 
     _.each(toRebase, function(commit) {
       rebaseMap[commit.get('id')] = true;
     });
-    
+
     // Verify each chosen commit exists in the list of commits given to the user
     initialCommitOrdering = [];
     _.each(options.initialCommitOrdering[0].split(','), function(id) {
@@ -2318,7 +2360,7 @@ GitEngine.prototype.rebaseFinish = function(
   var base = this.getCommitFromRef(targetSource);
   var hasStartedChain = false;
   // each step makes a new commit
-  var chainStep = _.bind(function(oldCommit) {
+  var chainStep = function(oldCommit) {
     var newId = this.rebaseAltID(oldCommit.get('id'));
     var parents;
     if (!options.preserveMerges || !hasStartedChain) {
@@ -2340,7 +2382,7 @@ GitEngine.prototype.rebaseFinish = function(
       newCommit,
       this.gitVisuals
     );
-  }, this);
+  }.bind(this);
 
   // set up the promise chain
   _.each(toRebase, function(commit) {
@@ -2349,7 +2391,7 @@ GitEngine.prototype.rebaseFinish = function(
     });
   }, this);
 
-  chain = chain.then(_.bind(function() {
+  chain = chain.then(function() {
     if (this.resolveID(currentLocation).get('type') == 'commit') {
       // we referenced a commit like git rebase C2 C1, so we have
       // to manually check out C1'
@@ -2360,7 +2402,7 @@ GitEngine.prototype.rebaseFinish = function(
       this.checkout(currentLocation);
     }
     return this.animationFactory.playRefreshAnimation(this.gitVisuals);
-  }, this));
+  }.bind(this));
 
   if (!options.dontResolvePromise) {
     this.animationQueue.thenFinish(chain, deferred);
@@ -2441,7 +2483,7 @@ GitEngine.prototype.checkout = function(idOrTarget) {
   if (type === 'tag') {
     target = target.get('target');
   }
-  
+
   this.HEAD.set('target', target);
 };
 
@@ -2602,9 +2644,9 @@ GitEngine.prototype.externalRefresh = function() {
 GitEngine.prototype.dispatch = function(command, deferred) {
   this.command = command;
   var vcs = command.get('vcs');
-  var executeCommand = _.bind(function() {
+  var executeCommand = function() {
     this.dispatchProcess(command, deferred);
-  }, this);
+  }.bind(this);
   // handle mode change will either execute sync or
   // animate during tree pruning / etc
   this.handleModeChange(vcs, executeCommand);
@@ -2612,9 +2654,9 @@ GitEngine.prototype.dispatch = function(command, deferred) {
 
 GitEngine.prototype.dispatchProcess = function(command, deferred) {
   // set up the animation queue
-  var whenDone = _.bind(function() {
+  var whenDone = function() {
     command.finishWith(deferred);
-  }, this);
+  }.bind(this);
   this.animationQueue = new AnimationQueue({
     callback: whenDone
   });
@@ -3029,4 +3071,3 @@ exports.Commit = Commit;
 exports.Branch = Branch;
 exports.Tag = Tag;
 exports.Ref = Ref;
-

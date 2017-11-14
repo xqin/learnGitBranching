@@ -28,7 +28,9 @@ exports.dialog = {
         '## 完成!',
         '',
         'あなたは*{numCommands}*回のコマンドでこの課題をクリアしました; ',
-        '模範解答では{best}回です。'
+        '模範解答では{best}回です。',
+        '',
+        '模範解答は、右下の`?`メニューの`Solution`から見ることができます。'
       ]
     }
   }],
@@ -36,9 +38,10 @@ exports.dialog = {
     type: 'ModalAlert',
     options: {
       markdowns: [
-        '## 碉堡了！',
+        '## 好样的！',
         '',
-        '你用 *{numCommands}* 条命令搞定了这一关；我们的答案要用 {best}。'
+        '你用 *{numCommands}* 条命令通过了这一关；',
+        '我们的答案要用 {best} 条命令。'
       ]
     }
   }],
@@ -64,6 +67,17 @@ exports.dialog = {
       ]
     }
   }],
+  'pt_BR': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Bom trabalho!!',
+        '',
+        'Você resolveu o nível usando *{numCommands}* comandos; ',
+        'nossa melhor solução usa {best}.'
+      ]
+    }
+  }],
   'fr_FR': [{
     type: 'ModalAlert',
     options: {
@@ -74,6 +88,38 @@ exports.dialog = {
         'notre solution le fait en {best}.'
       ]
     }
-  }]
+  }],
+  'ru_RU': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Супер!',
+        '',
+        'Ты прошёл уровень. Количество использованных команд - *{numCommands}* ; ',
+        'а наше решение состоит из {best}.'
+      ]
+    }
+  }],
+  'uk': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Молодець!',
+        '',
+        'Ти пройшов рівень. Кількість використаних команд \u2014 *{numCommands}*; ',
+        'наш розв’язок складається з {best}.'
+      ]
+    }
+  }],
+  'ko': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## 훌륭합니다!!',
+        '',
+        '*{numCommands}*개의 명렁으로 레벨을 통과했습니다.; ',
+        '모범 답안은 {best}개를 사용합니다.'
+      ]
+    }
+  }],
 };
-

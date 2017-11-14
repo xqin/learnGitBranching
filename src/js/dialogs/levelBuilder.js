@@ -43,16 +43,16 @@ exports.dialog = {
       markdowns: [
         '## 欢迎使用关卡生成器！',
         '',
-        '主要步骤如下：',
+        '关键步骤如下：',
         '',
-        '  * 使用 git 命令布置好初始环境',
-        '  * 使用 ```define start``` 命令定义起始树',
-        '  * 输入一系列 git 命令，编好答案',
-        '  * 使用 ```define goal``` 命令定义目标树。定义目标的同时定义答案',
-        '  * 还可以用 ```define hint``` 命令定义一个提示',
-        '  * 用 ```define name``` 修改名称',
-        '  * 还可以用 ```edit dialog``` 定义一个漂亮的开始对话框',
-        '  * 输入 ```finish``` 就可以输出你的关卡数据（JSON）了！'
+        '  * 用 Git 命令建立初始环境',
+        '  * 用 ```define start``` 命令定义初始提交树',
+        '  * 输入一系列 Git 命令作为（最佳）答案',
+        '  * 用 ```define goal``` 命令定义目标提交树。定义目标的同时也定义了答案',
+        '  * （选做）还可以用 ```define hint``` 命令定义提示',
+        '  * 用 ```define name``` 命令设置关卡名称',
+        '  * （选做）还可以用 ```edit dialog``` 定义一个漂亮的开始对话框',
+        '  * 用 ```finish``` 命令就可以输出你的关卡的JSON数据了！'
       ]
     }
   }],
@@ -94,6 +94,25 @@ exports.dialog = {
       ]
     }
   }],
+  'pt_BR': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Bem-vindo ao construtor de níveis!',
+        '',
+        'Estes são os passos principais:',
+        '',
+        '  * Prepare o ambiente inicial usando comandos do Git',
+        '  * Define a árvore inicial com ```define start```',
+        '  * Insira a série de comandos do git que representam a solução ótima',
+        '  * Defina a árvore objetivo com ```define goal```. O objetivo também determina a solução',
+        '  * Opcionalmente, defina dicas com ```define hint```',
+        '  * Dê um nome com ```define name```',
+        '  * Opcionalmente, defina uma mensagem inicial com ```edit dialog```',
+        '  * Digite o comando ```finish``` para obter seu nível em formato JSON!'
+      ]
+    }
+  }],
   'fr_FR': [{
     type: 'ModalAlert',
     options: {
@@ -112,5 +131,83 @@ exports.dialog = {
         '  * Entrez la commande ```finish``` pour délivrer votre niveau JSON!'
       ]
     }
-  }]
+  }],
+  'ja': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Levelエディタへようこそ!',
+        '',
+        'ここでは、以下の主にステップを踏みます:',
+        '',
+        '  * Gitコマンドで初期設定をします',
+        '  * ```define start```で開始時のコミットツリーを定義します',
+        '  * 一連のGitコマンドの（最適な）解答を入力します',
+        '  * ```define goal```でゴールのコミットツリーを定義します（ゴールを定義するということは、解答を定義するということでもあります）',
+        '  * オプションで```define hint```でヒントを定義します',
+        '  * ```define name```で名前を編集します',
+        '  * オプションで```edit dialog```で良い感じに開始時のダイアログを定義します',
+        '  * ```finish```コマンドを打つことであなたのlevelがJSONで出力されます',
+        '',
+        '*Note: このダイアログは`help builder`で何回でも表示できます！活用してください！*'
+      ]
+    }
+  }],
+  'ru_RU': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Добро пожаловать в конструктор уровней!',
+        '',
+        'Вот основные шаги:',
+        '',
+        '  * Настроить стартовое дерево при помощи команд git',
+        '  * Обозначить старовое дерево при помощи ```define start```',
+        '  * Ввести команды "оптимального" решения уровня',
+        '  * Обозначить цель уровня при помощи ```define goal```. Одновременно обозначится решение.',
+        '  * По желанию, можно указать подсказку при помощи ```define hint```',
+        '  * Указать название уровня при помощи ```define name```',
+        '  * По желанию, указать стартовое сообщение при помощи ```edit dialog```',
+        '  * Ввести ```finish``` и получить JSON с описанием уровня!'
+      ]
+    }
+  }],
+  'uk': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Ласкаво просимо до конструктора рівнів!',
+        '',
+        'Ось основні кроки:',
+        '',
+        '  * Налаштувати початкове середовище за допомогою команд git',
+        '  * Визначити стартове дерево за допомогою ```define start```',
+        '  * Ввести набір команд, що описують (оптимальний) розв’язок',
+        '  * Визначити кінцеве дерево за допомогою ```define goal```. Одночасно це визначить розв’язок',
+        '  * Додатково можна задати підказку за допомогою ```define hint```',
+        '  * Редагувати назву рівня за допомогою ```define name```',
+        '  * Додатково можна вказати файний початковий діалог за допомогою ```edit dialog```',
+        '  * Ввести команду ```finish``` й отримати JSON з описом рівня!'
+      ]
+    }
+  }],
+  'ko': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## 레벨 생성기 입니다. 환영합니다!',
+        '',
+        'Here are the main steps:',
+        '',
+        '  * git 명령어로 초기 환경을 만들어주세요',
+        '  * 시작 트리를 ```define start```로 정의하세요',
+        '  * (최적화된)정답을 만드는 git 명령어들을 입력하세요',
+        '  * 골 트리를 ```define goal```로 정의해주세요. 골을 정의하면 정답도 같이 정의됩니다',
+        '  * ```define hint```로 원하면 힌트도 정의해줄수 있습니다',
+        '  * 문제의 이름을 ```define name```로 수정하세요',
+        '  * 시작 글이 필요하다면 ```edit dialog```로 쓸 수 있습니다',
+        '  * ```finish```로 여러분의 레벨을 JSON결과로 받을 수 있습니다!'
+      ]
+    }
+  }],
 };

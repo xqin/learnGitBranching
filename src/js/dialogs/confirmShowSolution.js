@@ -25,7 +25,7 @@ exports.dialog = {
       markdowns: [
         '## 确定要看答案吗？',
         '',
-        '哥相信你！你可以的'
+        '相信自己，你可以的！'
       ]
     }
   }],
@@ -49,6 +49,16 @@ exports.dialog = {
       ]
     }
   }],
+  'pt_BR': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Tem certeza que quer ver a solução?',
+        '',
+        'Vamos lá, acredito que você consegue!'
+      ]
+    }
+  }],
   'fr_FR': [{
     type: 'ModalAlert',
     options: {
@@ -56,6 +66,42 @@ exports.dialog = {
         '## Êtes-vous sûr de vouloir voir la solution ?',
         '',
         'Je crois en vous ! Vous pouvez le faire'
+      ]
+    }
+  }],
+  'ja': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## どうしても正解がみたいですか?',
+        '',
+        '頑張れ頑張れできるできる絶対できる頑張れもっとやれるって',
+        '',
+        'やれる気持ちの問題だ頑張れ頑張れそこだ！',
+        '',
+        'そこで諦めるな絶対に頑張れ積極的にポジティブに頑張る頑張る',
+        '',
+        '北京だって頑張ってるんだから！'
+      ]
+    }
+  }],
+  'ru_RU': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Уверен, что хочешь посмотреть решение?',
+        '',
+        'Мы верим в тебя! Не прыгай! Ты сможешь!'
+      ]
+    }
+  }],
+  'uk': [{
+    type: 'ModalAlert',
+    options: {
+      markdowns: [
+        '## Впевнений, що хошеш побачити розв’язок?',
+        '',
+        'Я вірю в тебе! Ти впораєшся!'
       ]
     }
   }]

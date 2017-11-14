@@ -4,22 +4,28 @@ exports.level = {
   "name": {
     "en_US": "Rebase Introduction",
     "de_DE": "Einführung in Rebase",
-    "ja": "Rebaseの解説",
+    "ja"   : "Rebaseの解説",
     "es_AR": "Introducción a rebase",
+    "pt_BR": "Introdução ao rebase",
     "fr_FR": "Introduction à rebase",
     "ko": "리베이스(rebase)의 기본",
-    "zh_CN": "介绍 rebase",
-    "zh_TW": "介紹 rebase"
+    "zh_CN": "Git Rebase",
+    "zh_TW": "介紹 rebase",
+    "ru_RU": "Введение в rebase",
+    "uk": "Знайомство з rebase"
   },
   "hint": {
     "en_US": "Make sure you commit from bugFix first",
     "de_DE": "Geh vor dem committen sicher, dass du auf bugFix arbeitest",
-    "ja": "初めにbugFixを指した状態でコミットする",
+    "ja"   : "初めにbugFixを指した状態でコミットする",
     "fr_FR": "Assurez-vous de bien faire votre commit sur bugFix en premier",
     "es_AR": "Asegurate de commitear desde bugFix primero",
+    "pt_BR": "O bugFix precisa ser commitado primeiro",
     "ko": "bugFix 브랜치에서 먼저 커밋하세요",
-    "zh_CN": "确保你先在 bugFix 分支进行提交",
-    "zh_TW": "你要先在 bugFix branch 進行 commit"
+    "zh_CN": "先在 bugFix 分支上进行提交",
+    "zh_TW": "你要先在 bugFix branch 進行 commit",
+    "ru_RU": "Убедись, что сделал коммит в ветке bugFix",
+    "uk": "Впевнись, що зробив коміт в гілці bugFix"
   },
   "disabledMap": {
     "git revert": true
@@ -169,7 +175,7 @@ exports.level = {
               "",
               "ブランチを一つにまとめる方法として前回はマージを紹介しましたが、今回紹介するリベースを使うこともできます。リベースの動作は、マージするコミットのコピーをとって、どこかにストンと落とすというイメージです。",
               "",
-              "ピンと来ないかもしれませんが、リベースのメリットは一本の連続したシーケンシャルなコミットに整形できることです。リベースだけ使っていると、コミットのログや履歴が非常にクリーンな状態に保たれます。",
+              "ピンと来ないかもしれませんが、リベースのメリットは一本の連続したコミットに整形できることです。リベースだけ使っていると、コミットのログや履歴が非常にクリーンな状態に保たれます。",
               "",
               "早速実際にどう動くのかを見てみましょう。"
             ]
@@ -179,16 +185,16 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "前回と同様の2つのブランチを考えます：仮にいまbugFixブランチをチェックアウトしているとします。（アスタリスクつきのもの）",
+              "前回と同様の2つのブランチを考えます。仮にいまbugFixブランチをチェックアウトしているとします。（アスタリスクつきのもの）",
               "",
-              "bugFixに入ってる作業内容をそのまま直接masterブランチ上の内容に移動したいとします。こうすることで、実際には並行して開発された2つの別々のブランチ上のフィーチャを、あたかも1本のブランチ上でシーケンシャルに開発されていたかのように見せることができます。",
+              "bugFixに入ってる作業内容をそのまま直接masterブランチ上の内容に移動したいとします。こうすることで、実際には並行して開発された2つの別々のブランチ上の機能のソースを、あたかも1本のブランチ上で連続して開発されていたかのように見せることができます。",
               "",
               "`git rebase`コマンドでそれをやってみましょう。"
             ],
             "afterMarkdowns": [
-              "できた！これでbugFixブランチの作業内容はmasterブランチのすぐ先に移動したので、見た目が一本になってスッキリしました。",
+              "できました！これでbugFixブランチの作業内容はmasterブランチのすぐ先に移動したので、見た目が一本になってスッキリしました。",
               "",
-              "気を付けてほしいのは、C3コミットはどこかに残ってるということ（ツリーの中で半透明にしてあります）、そしてC3'は（C3との接続が切れているC3の）コピーがmasterブランチ上に作られているということです。",
+              "気を付けてほしいのは、C3コミットはどこかに残ってるということ（ツリーの中で半透明にしてあります）、そしてC3'は（C1との接続が切れているC3の）コピーがmasterブランチ上に作られているということです。",
               "",
               "一つ問題が残ってて、masterブランチがまだ最新化されていませんね。ちょっと直してみましょう。。"
             ],
@@ -200,7 +206,7 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "masterブランチはチェックアウトしてあります。この状態からmasterブランチを`bugFix`へとリベースしてみましょう。"
+              "masterブランチにチェックアウトしてあります。この状態からmasterブランチを`bugFix`へとリベースしてみましょう。"
             ],
             "afterMarkdowns": [
               "できた！`master`は`bugFix`の直前のコミットだったので、gitは単純に`master`ブランチのポインタを前に進めただけでした。"
@@ -293,6 +299,73 @@ exports.level = {
         }
       ]
     },
+    "pt_BR": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Rebase no Git",
+              "",
+              "A segunda forma de combinar trabalho entre ramos é o *rebase*. O rebase essencialmente pega um conjunto de commits, \"copia\" os mesmos, e os despeja em outro lugar.",
+              "",
+              "Isso pode parecer confuso, mas a vantagem do rebase é que ele pode ser usado para construir uma sequência mais bonita e linear de commits. O registro de commits (história do repositório) ficará muito mais limpa se for utilizado apenas rebase em vez de merge.",
+              "",
+              "Vejamo-lo em ação..."
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Aqui temos dois ramos novamente; note que o ramo bugFix está atualmente ativo (veja o asterisco)",
+              "",
+              "Queremos mover nosso trabalho do bugFix diretamente dentro do master. Desta forma, vai parecer que esses dois recursos foram desenvolvidos sequencialmente, quando na realidade foram feitos em paralelo.",
+              "",
+              "Vamos fazê-lo com o comando `git rebase`"
+            ],
+            "afterMarkdowns": [
+              "Incrível! Agora o trabalho do nosso ramo bugFix está logo após o do master, e temos uma linda sequência linear de commits.",
+              "",
+              "Perceba que o commit C3 ainda existe em algum lugar (ele está clareado na árvore), e que o C3' é a \"cópia\" que rebaseamos no master.",
+              "",
+              "O único problema é que o master não foi atualizado também, vamos fazê-lo agora..."
+            ],
+            "command": "git rebase master",
+            "beforeCommand": "git commit; git checkout -b bugFix C1; git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Agora o ramo `master` está ativo. Vamos em frente, fazer rebase no `bugFix`..."
+            ],
+            "afterMarkdowns": [
+              "Aí está! Como o `master` era um ancestral do `bugFix`, o git simplesmente moveu a referência do ramo `master` para frente na história."
+            ],
+            "command": "git rebase bugFix",
+            "beforeCommand": "git commit; git checkout -b bugFix C1; git commit; git rebase master; git checkout master"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Para completar este nível, faça o seguinte",
+              "",
+              "* Faça checkout de um novo branch chamado `bugFix`",
+              "* Faça um commit",
+              "* Volte ao master e faça um novo commit",
+              "* Faça checkout do bugFix novamente e faça rebase no master",
+              "",
+              "Boa sorte!"
+            ]
+          }
+        }
+      ]
+    },
     "fr_FR": {
       "childViews": [
         {
@@ -366,11 +439,11 @@ exports.level = {
             "markdowns": [
               "## Git Rebase",
               "",
-              "*rebasing*是在分支之间合并工作的第二种方法。Rebasing就是取出一系列的提交记录，\"复制\"它们，然后把在别的某个地方放下来。",
+              "第二种合并分支的方法是 `git rebase`。Rebase 实际上就是取出一系列的提交记录，“复制”它们，然后在另外一个地方逐个的放下去。",
               "",
-              "虽然听上去难以理解，rebasing 的优势是可以创造更线性的提交历史。假如只允许使用rebasing，代码库的提交日志/历史会更好看。",
+              "Rebase 的优势就是可以创造更线性的提交历史，这听上去有些难以理解。如果只允许使用 Rebase 的话，代码库的提交历史将会变得异常清晰。",
               "",
-              "让我们亲身体会下……"
+              "咱们还是实际操作一下吧……"
             ]
           }
         },
@@ -378,19 +451,19 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "这里，还是有两个分支；注意当前分支是 bugFix（看那颗星）",
+              "还是准备了两个分支；注意当前所在的分支是 bugFix（星号标识的是当前分支）",
               "",
-              "我们想要把 bugFix 里面的工作直接移到 master 分支上。使用这个方法，两个分支的功能看起来像是按顺序开发，实际上它们是平行开发的。",
+              "我们想要把 bugFix 分支里的工作直接移到 master 分支上。移动以后会使得两个分支的功能看起来像是按顺序开发，但实际上它们是并行开发的。",
               "",
-              "用 `git rebase`实现此目标"
+              "咱们这次用 `git rebase` 实现此目标"
             ],
             "command": "git rebase master",
             "afterMarkdowns": [
-              "碉堡吧，现在 bugFix 分支上的工作在 master 的最前端，同时我们也得到了一个更线性的提交序列。",
+              "怎么样？！现在 bugFix 分支上的工作在 master 的最顶端，同时我们也得到了一个更线性的提交序列。",
               "",
-              "注意，提交记录 C3 仍然存在（阴影的那货就是你了，还看什么看），而我们已经将 C3 复制到了master。",
+              "注意，提交记录 C3 依然存在（树上那个半透明的节点），而 C3' 是我们 Rebase 到 master 分支上的 C3 的副本。",
               "",
-              "现在唯一的问题是 master 分支还没有更新……下面就来更新它吧"
+              "现在唯一的问题就是 master 还没有更新，下面咱们就来更新它吧……"
             ],
             "beforeCommand": "git commit; git checkout -b bugFix C1; git commit"
           }
@@ -399,11 +472,11 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "现在，切换到 `master` 分支。接下来就把它 rebase 到 `bugFix` 吧……"
+              "现在我们切换到了 `master` 上。把它 rebase 到 `bugFix` 分支上……"
             ],
             "command": "git rebase bugFix",
             "afterMarkdowns": [
-              "完成！因为 `master` 是 `bugFix` 的下游，所以 git 只把 `master` 分支的记录前移到 `bugFix` 上。"
+              "好了！由于 `bugFix` 继承自 `master`，所以 Git 只是简单的把 `master` 分支的引用向前移动了一下而已。"
             ],
             "beforeCommand": "git commit; git checkout -b bugFix C1; git commit; git rebase master; git checkout master"
           }
@@ -412,14 +485,14 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "想完成此关，执行以下操作：",
+              "要完成此关，执行以下操作：",
               "",
-              "* 新建`bugFix`分支",
+              "* 新建并切换到 `bugFix` 分支",
               "* 提交一次",
               "* 切换回 master 分支再提交一次",
               "* 再次切换到 bugFix 分支，rebase 到 master 上",
               "",
-              "祝你好运啦！"
+              "祝你好运！"
             ]
           }
         }
@@ -484,7 +557,7 @@ exports.level = {
               "* 建立 `bugFix` branch",
               "* commit 一次",
               "* 切換回 master branch 再 commit 一次",
-              "* 再次切換到 bugFix branch，接著 rebase bugFix 這個 branch  到 master branch 上",
+              "* 再次切換到 bugFix branch，接著 rebase bugFix 這個 branch 到 master branch 上",
               "",
               "祝你好運啦！"
             ]
@@ -554,6 +627,140 @@ exports.level = {
               "* bugFix를 다시 선택하고 master에 리베이스 하세요",
               "",
               "화이팅!"
+            ]
+          }
+        }
+      ]
+    },
+    "ru_RU": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Git Rebase",
+              "",
+              "Второй способ объединения изменений в ветках - это *rebasing*. При ребейзе Git по сути копирует набор коммитов и переносит их в другое место.",
+              "",
+              "Несмотря на то, что это звучит достаточно непонятно, преимущество `rebase` в том, что c его помощью можно делать чистые и красивые линейные последовательности коммитов. История коммитов будет чище, если вы применяете `rebase`.",
+              "",
+              "Посмотрим, как это работает..."
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "У нас здесь снова две ветки. Обрати внимание, что выбрана ветка `bugFix` (отмечена звёздочкой)",
+              "",
+              "Хочется сдвинуть наши изменения из `bugFix` прямо на вершину ветки `master`. Благодаря этому всё будет выглядеть, как будто эти изменения делались последовательно, хотя на самом деле - параллельно.",
+              "",
+              "Применим `git rebase`"
+            ],
+            "afterMarkdowns": [
+              "Супер! Теперь изменения из `bugFix` находятся в конце ветки `master` и являют собой линейную последовательность коммитов.",
+              "",
+              "Обрати внимание, что коммит С3 до сих пор существует где-то, а С3' - это его \"копия\" в ветке `master`",
+              "",
+              "Единственная проблема - ветка `master` не обновлена до последних изменений. Это легко исправить."
+            ],
+            "command": "git rebase master",
+            "beforeCommand": "git commit; git checkout -b bugFix C1; git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Вот мы выбрали ветку `master`. Вперёд - сделаем rebase на `bugFix`"
+            ],
+            "afterMarkdowns": [
+              "Вуаля! Так как `master` был предком `bugFix`, git просто сдвинул ссылку на `master` вперёд."
+            ],
+            "command": "git rebase bugFix",
+            "beforeCommand": "git commit; git checkout -b bugFix C1; git commit; git rebase master; git checkout master"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Чтобы пройти этот уровень, сделай следующее:",
+              "",
+              "* Переключись на ветку `bugFix`",
+              "* Сделай коммит",
+              "* Вернись на `master` и сделай коммит ещё раз",
+              "* Переключись на `bugFix` и сделай rebase на `master`",
+              "",
+              "Удачи!"
+            ]
+          }
+        }
+      ]
+    },
+    "uk": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Git Rebase",
+              "",
+              "Інший спосіб комбінування змін з різних бранчів називається *rebase*. Rebase по суті бере кілька комітів , \"копіює\" їх, й кладе їх в інше місце.",
+              "",
+              "Це може звучати трохи незрозуміло, але основна перевага rebase в тому, що його використовують щоб створити зручну лінійну послідовність комітів. Коміт лог та історія будуть виглядати набагато чистіша, якщо користуватися лише rebase (а не merge)",
+              "",
+              "Спробуємо на практиці..."
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Ми знову маємо дві гілки; зауваж, що наразі вибрана гілка bugFix (вважай зірочку)",
+              "",
+              "Ми хочемо перемістити наші зміни з гілки bugFix прямо до змін з гілки master. Тоді це буде виглядати наче ці зміни були додані одна за одною, хоча насправді вони були додані одночасно.",
+              "",
+              "Давайте зробимо це за допомогою команди `git rebase`"
+            ],
+            "afterMarkdowns": [
+              "Добре! Тепер зміни з гілки bugFix знаходяться прямо попереду змін з master й ми отримали зручну лінійну послідовність комітів.",
+              "",
+              "Вважай що коміт C3 досі десь існує (в дереві він тьмяніший за решту), й C3' це \"копія\" яку ми заребейсили в master.",
+              "",
+              "Є лише одна проблема: гілка master також не була оновлена, давайте зробимо це наступним кроком..."
+            ],
+            "command": "git rebase master",
+            "beforeCommand": "git commit; git checkout -b bugFix C1; git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Тепер ми перейшли (checkout) до гілки `master`. Далі робимо rebase на `bugFix`..."
+            ],
+            "afterMarkdowns": [
+              "Вуаля! Так як `master` це предок `bugFix`, git просто просунув посилання гілки `master` вперед в історії."
+            ],
+            "command": "git rebase bugFix",
+            "beforeCommand": "git commit; git checkout -b bugFix C1; git commit; git rebase master; git checkout master"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Щоб пройти цей рівень, зроби наступне:",
+              "",
+              "* Зачекауть (checkout) новий бранч з назвою `bugFix`",
+              "* Зроби один коміт",
+              "* Повернись на master й зроби ще один коміт",
+              "* Зачекауть bugFix знову й заребейсь його на master",
+              "",
+              "Нехай щастить!"
             ]
           }
         }

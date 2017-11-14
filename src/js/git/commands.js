@@ -26,6 +26,10 @@ var validateBranchName = function(engine, name) {
   return engine.validateBranchName(name);
 };
 
+var validateOriginBranchName = function(engine, name) {
+  return engine.origin.validateBranchName(name);
+};
+
 var validateBranchNameIfNeeded = function(engine, name) {
   if (engine.refs[name]) {
     return name;
@@ -149,8 +153,13 @@ var commandConfig = {
         msg = args[0];
       }
 
+      if (commandOptions['--amend']) {
+        args = commandOptions['--amend'];
+        command.validateArgBounds(args, 0, 0, '--amend');
+      }
+
       var newCommit = engine.commit({
-        isAmend: commandOptions['--amend']
+        isAmend: !!commandOptions['--amend']
       });
       if (msg) {
         msg = msg
@@ -263,7 +272,7 @@ var commandConfig = {
       engine.pull({
         source: source,
         destination: destination,
-        isRebase: commandOptions['--rebase']
+        isRebase: !!commandOptions['--rebase']
       });
     }
   },
@@ -279,10 +288,39 @@ var commandConfig = {
       }
 
       command.validateArgBounds(generalArgs, 0, 2);
-      // allow formats of: git Faketeamwork 2 or git Faketeamwork side 3
-      var branch = (engine.origin.refs[generalArgs[0]]) ?
-        generalArgs[0] : 'master';
-      var numToMake = parseInt(generalArgs[0], 10) || generalArgs[1] || 1;
+      var branch;
+      var numToMake;
+
+      // allow formats of: git fakeTeamwork 2 or git fakeTeamwork side 3
+      switch (generalArgs.length) {
+        // git fakeTeamwork
+        case 0:
+          branch = 'master';
+          numToMake = 1;
+          break;
+
+        // git fakeTeamwork 10 or git fakeTeamwork foo
+        case 1:
+          if (isNaN(parseInt(generalArgs[0], 10))) {
+            branch = validateOriginBranchName(engine, generalArgs[0]);
+            numToMake = 1;
+          } else {
+            numToMake = parseInt(generalArgs[0], 10);
+            branch = 'master';
+          }
+          break;
+
+        case 2:
+          branch = validateOriginBranchName(engine, generalArgs[0]);
+          if (isNaN(parseInt(generalArgs[1], 10))) {
+            throw new GitError({
+              msg: 'Bad numeric argument: ' + generalArgs[1]
+            });
+          }
+          numToMake = parseInt(generalArgs[1], 10);
+          break;
+
+      }
 
       // make sure its a branch and exists
       var destBranch = engine.origin.resolveID(branch);
@@ -291,7 +329,7 @@ var commandConfig = {
           msg: intl.str('git-error-options')
         });
       }
-        
+
       engine.fakeTeamwork(numToMake, branch);
     }
   },
@@ -520,7 +558,7 @@ var commandConfig = {
       );
 
       if (newCommit === undefined) {
-        // its just a fast forwrard
+        // its just a fast forward
         engine.animationFactory.refreshTree(
           engine.animationQueue, engine.gitVisuals
         );
@@ -583,7 +621,7 @@ var commandConfig = {
       if (commandOptions['-i']) {
         var args = commandOptions['-i'].concat(generalArgs);
         command.twoArgsImpliedHead(args, ' -i');
-        
+
         if (commandOptions['--interactive-test']) {
           engine.rebaseInteractiveTest(
             args[0],
@@ -766,7 +804,7 @@ var commandConfig = {
       engine.describe(generalArgs[0]);
     }
   },
-  
+
   tag: {
     regex: /^git +tag($|\s)/,
     execute: function(engine, command) {
@@ -776,7 +814,7 @@ var commandConfig = {
         engine.printTags(tags);
         return;
       }
-      
+
       command.twoArgsImpliedHead(generalArgs);
       engine.tag(generalArgs[0], generalArgs[1]);
     }

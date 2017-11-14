@@ -89,7 +89,7 @@ var VisTag = VisBase.extend({
 
   getTagStackIndex: function() {
     if (this.get('isHead')) {
-      // head is never stacked with other Tages
+      // head is never stacked with other Tags
       return 0;
     }
 
@@ -163,7 +163,7 @@ var VisTag = VisBase.extend({
   getTextSize: function() {
     var getTextWidth = function(visTag) {
       var textNode = (visTag.get('text')) ? visTag.get('text').node : null;
-      return (textNode === null) ? 0 : textNode.clientWidth;
+      return (textNode === null) ? 0 : textNode.getBoundingClientRect().width;
     };
 
     var firefoxFix = function(obj) {
@@ -219,7 +219,7 @@ var VisTag = VisBase.extend({
     var name = this.get('tag').getName();
     var isRemote = this.getIsRemote();
     var isHg = this.gitEngine.getIsHg();
-    
+
     return name;
   },
 
@@ -290,7 +290,7 @@ var VisTag = VisBase.extend({
     ];
 
     _.each(objs, function(rObj) {
-      rObj.click(_.bind(this.onClick ,this));
+      rObj.click(this.onClick.bind(this));
     }, this);
   },
 
@@ -341,7 +341,7 @@ var VisTag = VisBase.extend({
     if (this.getIsGoalAndNotCompared()) {
       return this.get('stroke-width') / 5.0;
     }
-    
+
     return this.get('stroke-width');
   },
 

@@ -6,18 +6,27 @@ exports.level = {
     "en_US": "Relative Refs (^)",
     "fr_FR": "Références relatives (^)",
     "ja"   : "相対リファレンス (^)",
-    "zh_CN": "相对引用(^)",
+    "zh_CN": "相对引用（^）",
     "zh_TW": "相對引用（^）",
     "es_AR": "Referencias relativas (^)",
-    "de_DE": "Relative Referenzen (^)"
+    "pt_BR": "Referências relativas (^)",
+    "de_DE": "Relative Referenzen (^)",
+    "ru_RU": "Относительные ссылки (^)",
+    "ko"   : "상대 참조 (^) (Relative Refs)",
+    "uk": "Відносні посилання"
   },
   "hint": {
     "en_US": "Remember the Caret (^) operator!",
     "fr_FR": "Rappelez-vous de l'opérateur circonflexe (^)",
+    "ja"   : "相対リファレンス(^)を思い出して！",
     "de_DE": "Denk an den Dach-Operator (^)!",
     "es_AR": "¡No te olvides del operador ^!",
-    "zh_CN": "记住插入(^)操作符!",
-    "zh_TW": "不要忘記插入（^）符號！"
+    "pt_BR": "Não se esqueça do operador circunflexo (^)",
+    "zh_CN": "记住操作符（^）！",
+    "zh_TW": "不要忘記插入（^）符號！",
+    "ru_RU": "Не забудь оператор `^`",
+    "ko"   : "(^)연산자를 기억하세요!",
+    "uk": "Не забудь оператор `^`"
   },
   "startDialog": {
     "en_US": {
@@ -115,7 +124,7 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "Comme je l'ai dit, spécifier un commit par son identifiant n'est pas très convénient, c'est pourquoi Git a des références relatives. Elles sont géniales !",
+              "Comme je l'ai dit, spécifier un commit par son identifiant n'est pas très pratique, c'est pourquoi Git a des références relatives. Elles sont géniales !",
               "",
               "Avec les références relatives vous pouvez commencer par vous placer à un endroit mémorisable (comme la branche `bugFix` ou `HEAD`) et travailler depuis ici.",
               "",
@@ -207,7 +216,7 @@ exports.level = {
             "beforeMarkdowns": [
               "Schauen wir uns zuerst den Dach-Operator (`^`) an. Jedes mal wenn du ihn hinter einen Referenz-Namen setzt, sagst du Git damit, dass es zum Vorgänger des angegebenen Commits gehen soll.",
               "",
-              "Das heißt `master^` ist gleichbedeutend mit \"direkter Vorgänder des Commits, auf den `master` zeigt\".",
+              "Das heißt `master^` ist gleichbedeutend mit \"direkter Vorgänger des Commits, auf den `master` zeigt\".",
               "",
               "`master^^` ist also der Vorgänger des Vorgängers von `master`.",
               "",
@@ -320,19 +329,19 @@ exports.level = {
         }
       ]
     },
-    "zh_CN": {
+    "pt_BR": {
       "childViews": [
         {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "## 相对引用",
+              "## Referências relativas",
               "",
-              "用指定提交记录hash值的方式在Git中移动会变得比较乏味。在现实中，你不会有漂亮的可视化的提交记录树放在终端旁边，所以你不得不用`git log`来查看hash值。",
+              "Mover-se pela árvore do Git especificando o hash do commit pode se tornar um pouco entediante. No mundo real, você não terá à sua disposição essa bonita visualização da árvore ao lado do seu terminal, então você terá de usar o comando `git log` para ver os hashes.",
               "",
-              "另外，hash值在真实的Git环境中也会更长。举个例子，前一关的介绍中的提交记录的hash值是`fed2da64c0efc5293610bdd892f82a58e8cbc5d8`。不要把舌头闪了...",
+              "Além disso, os hashes são geralmente muito maiores no mundo real. Por exemplo, o hash do commit que introduziu o nível de exercícios anterior é `fed2da64c0efc5293610bdd892f82a58e8cbc5d8`. Não é algo exatamente fácil de lembrar.",
               "",
-              "好的一面是，Git对hash的处理很智能。你只需要提供能够唯一标识提交记录的前几个字符即可。所以，我可以仅输入`fed2`而不是上面的一长串字符。"
+              "O que salva é que o Git é inteligente com os hashes. Ele só exige que você especifique a quantidade de caracteres do hash suficiente para identificar unicamente o commit. Então eu posso digitar apenas `fed2` em vez da grande string acima."
             ]
           }
         },
@@ -340,14 +349,14 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "我说过，通过hash指定提交记录不是很方便，所以Git引入了相对引用。这个就很牛掰了!",
+              "Como eu disse, especificar commits pelo hash não é a sempre o mais conveniente, e é por isso que o Git suporta referências relativas. Elas são fantásticas!",
               "",
-              "使用相对引用，你可以从一个易于记忆的地方（比如分支名`bugFix`或`HEAD`）开始工作。",
+              "Com referências relativas, você pode começar a partir de um ponto fácil de lembrar (como o ramo `bugFix` ou o `HEAD`) e referenciar a partir dali.",
               "",
-              "相对引用非常给力，这里我介绍两个简单的用法：",
+              "Commits relativos são poderosos, mas vamos introduzir apenas dois tipos simples aqui:",
               "",
-              "* 使用`^`向上移动1个提交记录",
-              "* 使用`~<num>`向上移动多个提交记录"
+              "* Mover para cima um commit por vez com `^`",
+              "* Mover para cima um número de vezes com `~<num>`"
             ]
           }
         },
@@ -355,16 +364,16 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "首先看看插入(^)操作符。把插入符跟在引用名后面，表示让Git寻找指定提交记录的父提交。",
+              "Vamos dar uma olhada no operador circunflexo (^) primeiro. Cada vez que você adicioná-lo a um nome de referência, você está dizendo ao Git para encontrar o pai do commit especificado.",
               "",
-              "所以`master^`相当于\"`master`的父提交\"。",
+              "Então, dizer `master^` é equivalente a \"o primeiro pai do `master`\".",
               "",
-              "`master^^`是`master`的父父提交（上上代祖先）",
+              "`master^^` é o avô (ancestral de segunda geração) do `master`",
               "",
-              "切换到master的父提交"
+              "Vamos fazer checkout do commit logo acima do master"
             ],
             "afterMarkdowns": [
-              "唰！搞定。这种方式比输入提交记录的hash值简单多了！"
+              "Boom! Pronto. Muito mais fácil que digitar o hash do commit"
             ],
             "command": "git checkout master^",
             "beforeCommand": "git commit"
@@ -374,10 +383,10 @@ exports.level = {
           "type": "GitDemonstrationView",
           "options": {
             "beforeMarkdowns": [
-              "你也可以`HEAD`把用作相对引用。以下命令使用`HEAD`在提交树中向上移动几次。"
+              "Você também pode usar o `HEAD` como parte de uma referência relativa. Vamos usar isso para nos mover para cima algumas vezes na árvore de commits"
             ],
             "afterMarkdowns": [
-              "简单！我们可以一直使用`HEAD^`向上移动。"
+              "Fácil! Podemos viajar para trás no tempo com `HEAD^`"
             ],
             "command": "git checkout C3; git checkout HEAD^; git checkout HEAD^; git checkout HEAD^",
             "beforeCommand": "git commit; git commit"
@@ -387,9 +396,84 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "要完成此关，切换到`bugFix`的父提交。这会分离出`HEAD`.",
+              "Para completar esse nível, faça checkout do commit pai de `bugFix`. Isso soltará o `HEAD`.",
               "",
-              "如果你愿意的话，使用hash值也可以过关，但为何不试试使用相对引用呢？"
+              "Você pode especificar o hash se quiser, mas tente usar referências relativas em vez disso!"
+            ]
+          }
+        }
+      ]
+    },
+    "zh_CN": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## 相对引用",
+              "",
+              "通过指定提交记录哈希值的方式在 Git 中移动不太方便。在实际应用时，并没有像本程序中这么漂亮的可视化提交树供你参考，所以你就不得不用 `git log` 来查查看提交记录的哈希值。",
+              "",
+              "并且哈希值在真实的 Git 世界中也会更长（译者注：基于 SHA-1，共 40 位）。例如前一关的介绍中的提交记录的哈希值可能是 `fed2da64c0efc5293610bdd892f82a58e8cbc5d8`。舌头都快打结了吧...",
+              "",
+              "比较令人欣慰的是，Git 对哈希的处理很智能。你只需要提供能够唯一标识提交记录的前几个字符即可。因此我可以仅输入`fed2` 而不是上面的一长串字符。"
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "正如我前面所说，通过哈希值指定提交记录很不方便，所以 Git 引入了相对引用。这个就很厉害了!",
+              "",
+              "使用相对引用的话，你就可以从一个易于记忆的地方（比如 `bugFix` 分支或 `HEAD`）开始计算。",
+              "",
+              "相对引用非常给力，这里我介绍两个简单的用法：",
+              "",
+              "* 使用 `^` 向上移动 1 个提交记录",
+              "* 使用 `~<num>` 向上移动多个提交记录，如 `~3`"
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "首先看看操作符 (^)。把这个符号加在引用名称的后面，表示让 Git 寻找指定提交记录的父提交。",
+              "",
+              "所以 `master^` 相当于“`master` 的父节点”。",
+              "",
+              "`master^^` 是 `master` 的第二个父节点",
+              "",
+              "现在咱们切换到 master 的父节点"
+            ],
+            "afterMarkdowns": [
+              "搞定。这种方式是不是比输入哈希值方便多了？！"
+            ],
+            "command": "git checkout master^",
+            "beforeCommand": "git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "你也可以将 `HEAD` 作为相对引用的参照。下面咱们就用 `HEAD` 在提交树中向上移动几次。"
+            ],
+            "afterMarkdowns": [
+              "很简单吧？！我们可以一直使用 `HEAD^` 向上移动。"
+            ],
+            "command": "git checkout C3; git checkout HEAD^; git checkout HEAD^; git checkout HEAD^",
+            "beforeCommand": "git commit; git commit"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "要完成此关，切换到 `bugFix` 的父节点。这会进入分离 `HEAD` 状态。",
+              "",
+              "如果你愿意的话，使用哈希值也可以过关，但请尽量使用相对引用！"
             ]
           }
         }
@@ -482,7 +566,7 @@ exports.level = {
               "",
               "その上、実際のハッシュはこちらで見たものよりずっと長いです。例えば、先ほどのレベルの紹介のコミットハッシュは`fed2da64c0efc5293610bdd892f82a58e8cbc5d8`です。少し覚えにくいですね...",
               "",
-              "そのため、gitでは手短くコミットを指定する方法があります。ユニークな存在だと確認できるだけのハッシュの字数を入力すれば良いですー上記の長い文字列の代わりに`fed2`を入力するだけで済みます。"
+              "そのため、gitでは手短くコミットを指定する方法があります。ユニークな存在だと確認できるだけのハッシュの字数を入力すれば良いです -- 上記の長い文字列の代わりに`fed2`を入力するだけで済みます。"
             ]
           }
         },
@@ -509,7 +593,7 @@ exports.level = {
               "",
               "なので `master^`と記述すれば、\"`master`の一個上の親\"、という意味になります。",
               "",
-              "そして`master^^`とはその親の一つの上のコミット(２代目の先祖)を指します。",
+              "そして`master^^`とはその親の一つの上のコミット(２代前の親)を指します。",
               "",
               "masterの上のコミットをここで見てみましょう"
             ],
@@ -539,7 +623,232 @@ exports.level = {
             "markdowns": [
               "このレベルをクリアするには、`bugFix`の親コミットをチェックアウトしてください。その操作により`HEAD`が分離されます。",
               "",
-              "ハッシュを使用してもいいですが、その代わりに相対リファレンスをトライしてみましょう！"
+              "ハッシュを使用してもいいですが、その代わりに相対リファレンスを試してみましょう！"
+            ]
+          }
+        }
+      ]
+    },
+    "ru_RU": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Относительные ссылки",
+              "",
+              "Передвигаться по дереву Git при помощи указания хешей коммитов немного неудобно. В реальной ситуации у вас вряд ли будет красивая визуализация дерева в терминале, так что придётся каждый раз использовать `git log`, чтобы найти хеш нужного коммита",
+              "",
+              "Более того, хеши в реальном репозитории Git намного более длинные. Например, хеш для коммита, который приведён в предыдущем уровне - `fed2da64c0efc5293610bdd892f82a58e8cbc5d8`. Не очень просто для произношения =)",
+              "",
+              "Хорошая новость в том, что Git достаточно умён в работе с хешами. Ему нужны лишь первые несколько символов для того, чтобы идентифицировать конкретный коммит. Так что можно написать просто `fed2` вместо колбасы выше."
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Как мы уже говорили, указание на коммит при помощи его хеша - не самый удобный способ, поэтому Git поддерживает относительные ссылки и они прекрасны!",
+              "",
+              "С относительными ссылками можно начать с какого-либо удобного места (например, с ветки `bugFix` или от HEAD) и двигаться от него",
+              "",
+              "Относительные ссылки - мощный инструмент, но мы покажем два простых способа использования:",
+              "",
+              "* Перемещение на один коммит назад `^`",
+              "* Перемещение на <num> коммитов назад `~<num>`"
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Для начала рассмотрим оператор каретки (^). Когда мы добавляем его к имени ссылки, Git воспринимает это как указание найти родителя указанного коммита.",
+              "",
+              "Так что `master^` означает \"первый предок ветки `master`\".",
+              "",
+              "`master^^` означает предок предка ветки `master`",
+              "",
+              "Получим предка ветки `master` на практике"
+            ],
+            "afterMarkdowns": [
+              "Опачки! Готово. Сильно проще, чем поиск и указание хеша."
+            ],
+            "command": "git checkout master^",
+            "beforeCommand": "git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Можно также использовать `HEAD` как относительную ссылку. Попробуем пройти несколько раз назад по дереву коммитов"
+            ],
+            "afterMarkdowns": [
+              "Изи! Мы можем путешествовать во времени при помощи `HEAD^`"
+            ],
+            "command": "git checkout C3; git checkout HEAD^; git checkout HEAD^; git checkout HEAD^",
+            "beforeCommand": "git commit; git commit"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Чтобы пройти этот уровень, переместись на первого родителя ветки `bugFix`. Это отделит `HEAD` от ветки.",
+              "",
+              "Конечно, можно указать хеш, но надо попробовать использовать относительные ссылки!"
+            ]
+          }
+        }
+      ]
+    },
+	"ko": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## 상대 참조",
+              "",
+              "Git에서 여기저기 이동할 때 커밋의 해시를 사용하는 방법은 조금 귀찮습니다. 실제로 Git을 사용할 때는 터미널화면 옆에 예쁘장하게 커밋트리가 보이진 않으니까요. 매번 해시를 확인하려고 `git log` 명령어를 치고 있을 겁니다.",
+              "",
+              "나아가서, 실제 Git에서는 해시들이 훨씬 더 깁니다. 예를 들어  이전 레벨에 소개했던 커밋의 해시는 `fed2da64c0efc5293610bdd892f82a58e8cbc5d8`입니다. 쓰기 쉬워 보이진 않네요....",
+              "",
+              "다행히도, Git은 똑똑합니다. 해시가 커밋의 고유한 값임을 보여줄 수 있을 만큼만 명시해주면 됩니다. 위의 긴 문자열 대신 `fed2`만 입력해도 되는 겁니다."
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "말했듯이, 커밋들을 해시로 구분하고 사용하는것이 아주 편하다고 볼 수는 없습니다. Git의 상대 참조(Relative Ref)가 여기서 등장합니다. 굉장한 기능입니다.",
+              "",
+              "상대 참조로 우리가 기억할 만한 지점(브랜치 `bugFix`라던가 `HEAD`라던가)에서 출발해서 이동하여 다른 지점에 도달해 작업을 할 수 있습니다.",
+              "",
+              "상대 커밋은 강력한 기능인데, 여기서 두가지 간단한 방법을 소개하겠습니다.",
+              "",
+              "* 한번에 한 커밋 위로 움직이는 `^`",
+              "* 한번에 여러 커밋 위로 올라가는 `~<num>`"
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "먼저 캐럿 (^) 연산자 부터 알아보겠습니다. 참조 이름에 하나씩 추가할 때마다, 명시한 커밋의 부모를 찾게 됩니다.",
+              "",
+              "`master^`는 \"`master`의 부모\"와 같은 의미 입니다.",
+              "",
+              "`master^^` 는 \"`master`의 조부모(부모의 부모)\"를 의미합니다",
+              "",
+              "master 위에 있는 부모를 체크아웃 해 봅시다."
+            ],
+            "afterMarkdowns": [
+              "Boom! 됬습니다. 커밋의 해시를 입력하는 것보다 훨씬 쉬운 방법입니다."
+            ],
+            "command": "git checkout master^",
+            "beforeCommand": "git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "또한 참조인 `HEAD`도 상대참조를 위해 사용할 수 있습니다. 커밋트리 위쪽으로 움직이기위해 여러번 사용 해 봅시다."
+            ],
+            "afterMarkdowns": [
+              "쉽군요! 이제 우린 `HEAD^`를 통해 시간을 거슬러 올라갈 수 있습니다."
+            ],
+            "command": "git checkout C3; git checkout HEAD^; git checkout HEAD^; git checkout HEAD^",
+            "beforeCommand": "git commit; git commit"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "이 레벨을 완료하기 위해서는, `bugFix`의 부모 커밋을 체크아웃 하십시오. 이렇게 하면 `HEAD`가 분리 될 것입니다.",
+              "",
+              "해시를 이용해서도 할 수 있지만, 상대 참조를 활용하는 것을 연습해 보세요!"
+            ]
+          }
+        }
+      ]
+    },
+    "uk": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Відносні посилання",
+              "",
+              "Пересуватися по гіту використовуючи хеш комітів може бути трохи напряжно. В справжньому гіті в тебе не буде візуалізації дерева комітів в терміналі, тому доведеться використовувати `git log` щоб подивится хеші комітів.",
+              "",
+              "Більше того, хеші як правило набагато довші в справжньому гіті. Типовий хеш виглядає як `fed2da64c0efc5293610bdd892f82a58e8cbc5d8`. Без мнемонік не обійтися)...",
+              "",
+              "З іншого боку git дуже розумно працює з хешами. Він просить вказати рівно стільки літер, скільки потрібно щоб відрізнити один коміт від іншого. Отже, замість довгого хеша зверху можна просто набрати `fed2`."
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Як було сказано, вказувати коміти за хешем не найзручніша річ, через це git підтримує відносні посилання. Вони реально круті!",
+              "",
+              "З відносними посиланнями ти можеш почати з якогось зручного місця  (наприклад гілки `bugFix` чи посилання `HEAD`) й вказати потрібний коміт відносно цього посилання",
+              "",
+              "Відносні коміти є дуже потужним інструментом, але ми почнемо з двох простих прикладів:",
+              "",
+              "* Йдемо вверх на один коміт за допомогою `^`",
+              "* Йдемо вверх на кілька комітів за допомогою `~<число>`"
+            ]
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Розберемось спочатку з оператором каретки (^). Кожна каретка додана до посилання (напр. до імені коміту) вказує git що потрібно знайти батька посилання до якого застосована каретка.",
+              "",
+              "Тож `master^` тотожнє до \"перший предок посилання `master`\".",
+              "",
+              "`master^^` це дідусь (предок другого покоління) посилання `master`",
+              "",
+              "Давайте перейдемо на коміт трохи вище від master:"
+            ],
+            "afterMarkdowns": [
+              "Бум! Готово. Трохи простіше ніж набирати хеш коміту"
+            ],
+            "command": "git checkout master^",
+            "beforeCommand": "git commit"
+          }
+        },
+        {
+          "type": "GitDemonstrationView",
+          "options": {
+            "beforeMarkdowns": [
+              "Ти також можеш використовувати `HEAD` з відносними посиланнями. Давай використаємо це щоб трошки піднятися по дереву."
+            ],
+            "afterMarkdowns": [
+              "Просто! Ми можемо переміщуватись назад в часі з `HEAD^`"
+            ],
+            "command": "git checkout C3; git checkout HEAD^; git checkout HEAD^; git checkout HEAD^",
+            "beforeCommand": "git commit; git commit"
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Щоб пройти цей рівень перемістись на першого предка гілки `bugFix`. Ти опинишся в стані `detach HEAD`.",
+              "",
+              "Ти, звичайно, можеш вказати хеш, але натомість спробуй користуватися відносними посиланнями!"
             ]
           }
         }

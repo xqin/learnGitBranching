@@ -12,19 +12,25 @@ exports.level = {
     "fr_FR": "Branche spaghetti",
     "de_DE": "Branch-Spaghetti",
     "es_AR": "Enslada de branches",
+    "pt_BR": "Espaguete de ramos",
     "ja": "ブランチスパゲッティ",
-    "zh_CN": "分支浆糊",
-    "zh_TW": "branch 漿糊"
+    "zh_CN": "纠缠不清的分支",
+    "zh_TW": "branch 漿糊",
+    "ru_RU": "Спутанные ветки",
+    "uk"   : "Макарони з гілок"
   },
   "hint": {
     "en_US": "Make sure to do everything in the proper order! Branch one first, then two, then three",
     "fr_FR": "Faites attention à tout faire dans le bon ordre ! La branche one d'abord, puis la seconde, puis la troisième",
     "de_DE": "Stelle sicher, dass du alles in der richtigen Reihenfolge machst! Branche erst one, dann two, dann three.",
     "es_AR": "¡Asegurate de hacer las cosas en el orden correcto! Brancheá `one` primero, después `two`, y después `three`.",
+    "pt_BR": "Certifique-se de fazer tudo na ordem correta! Crie o ramo `one` primeiro, depois `two`, depois `three`.",
     "ja": "全て正しい順番で処理すること！oneが最初で、次がtwo、最後にthreeを片付ける。",
     "ko": "이 문제를 해결하는 방법은 여러가지가 있습니다! 체리픽(cherry-pick)이 가장 쉽지만 오래걸리는 방법이고, 리베이스(rebase -i)가 빠른 방법입니다",
     "zh_CN": "确保你是按照正确的顺序来操作！先操作分支 `one`, 然后 `two`, 最后才是 `three`",
-    "zh_TW": "確認你是按照正確的順序來操作！先操作 branch  `one`, 然後 `two`, 最後才是 `three`"
+    "zh_TW": "確認你是按照正確的順序來操作！先操作 branch  `one`, 然後 `two`, 最後才是 `three`",
+    "ru_RU": "Убедись, что у нас всё по порядку! Сначала ветка `one`, потом `two` и только потом `three`",
+    "uk":    "Переконайся, що все йде за порядком! Спершу гілка `one`, потім `two`, і тільки потім `three`"
   },
   "startDialog": {
     "en_US": {
@@ -57,11 +63,11 @@ exports.level = {
               "",
               "WOAHHHhhh ! Nous avons pas mal d'objectifs dans ce niveau.",
               "",
-              "Actuellement nous havons `master` qui se situe quelques commits devant les branches `one` `two` et `three`. Pour une raison quelconque, nous avons besoin de mettre ces trois branches à jour avec les modifications des derniers commits sur master.",
+              "Actuellement nous avons `master` qui se situe quelques commits devant les branches `one` `two` et `three`. Pour une raison quelconque, nous avons besoin de mettre ces trois branches à jour avec les modifications des derniers commits sur master.",
               "",
               "La branche `one` a besoin d'une réorganisation et de la suppression de `C5`. `two` doit simplement être reordonnée, et `three` ne nécessite qu'un commit !",
               "",
-              "Nous vous laissons imaginer la solution pour ce niveau -- comparer avec notre solution après-coup avec la commande `show solution`. "
+              "Nous vous laissons imaginer la solution pour ce niveau ; comparez avec notre solution après-coup avec la commande `show solution`. "
             ]
           }
         }
@@ -82,6 +88,26 @@ exports.level = {
               "La rama `one` necesita reordenarse, y eliminar `C5`. `two` necesita sólo reordenamiento, y `three` ¡sólo necesita un commit!",
               "",
               "Te vamos a dejar darte cuenta cómo resolver este -- asegurate de mirar la solución, después, usando `show solution`. "
+            ]
+          }
+        }
+      ]
+    },
+    "pt_BR": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Espaguete de ramos",
+              "",
+              "Uhuuuuu Nelly! Temos um belo de um objetivo para alcançar neste nível.",
+              "",
+              "Temos aqui um `master` que está alguns commits atrás dos ramos `one`, `two` e `three`. Seja lá por qual razão, precisamos atualizar esses três outros ramos com versões modificadas dos últimos commits do master.",
+              "",
+              "O ramo `one` precisa de uma reordenação e da exclusão do `C5`. O `two` precisa apenas de reordenação. O `three` precisa de um único commit!",
+              "",
+              "Vamos deixar você descobrir como resolver esta tarefa -- mas não deixe de ver a nossa solução depois com o comando `show solution`. "
             ]
           }
         }
@@ -133,15 +159,15 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "## Branch Spaghetti",
+              "## 纠缠不清的分支",
               "",
               "哇塞大神！这关我们要来点不同的！",
               "",
-              "现在我们的 `master` 分支是比 `one` `two` 和 `three` 要多几个提交。出于某种原因，我们需要把其他三个分支更新到 master 分支上新近的几个不同提交上。（update these three other brances with modified versions of the last few commits on master）",
+              "现在我们的 `master` 分支是比 `one`、`two` 和 `three` 要多几个提交。出于某种原因，我们需要把 `master` 分支上最近的几次提交做不同的调整后，分别添加到各个的分支上。",
               "",
-              "分支 `one` 需要重新排序和撤销， `two` 需要完全重排，而 `three` 只需要提交一次。",
+              "`one` 需要重新排序并删除 `C5`，`two` 仅需要重排排序，而 `three` 只需要提交一次。",
               "",
-              "慢慢摸索会找到答案的 —— 你完事记得用 `show solution` 看看我们的答案哦。"
+              "慢慢来，你会找到答案的 —— 记得通关之后用 `show solution` 看看我们的答案哦。"
             ]
           }
         }
@@ -182,6 +208,46 @@ exports.level = {
               "`one` 브랜치는 순서를 바꾸고 `C5`커밋을 삭제하고, `two`브랜치는 순서만 바꾸며, `three`브랜치는 하나의 커밋만 가져옵시다!",
               "",
               "자유롭게 이 문제를 풀어보시고 나서 `show solution`명령어로 모범 답안을 확인해보세요."
+            ]
+          }
+        }
+      ]
+    },
+    "ru_RU": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Спутанные ветки",
+              "",
+              "УОУ! В этом уровне придётся попотеть!",
+              "",
+              "У нас тут по несколько коммитов в ветках `one`, `two` и `three`. Не важно почему, но нам надо видоизменить эти три ветки при помощи более поздних коммитов из ветки `master`.",
+              "",
+              "Ветка `one` нуждается в изменении порядка и удалении `C5`. `two` требует полного перемешивания, а `three` хочет получить только один коммит",
+              "",
+              "Как пройти этот уровень – решать тебе, а как найдёшь решение – сравни его с нашим при помощи `show solution`."
+            ]
+          }
+        }
+      ]
+    },
+    "uk": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Макарони з гілок",
+              "",
+              "Ооо Неля! Ну й завданнячко.",
+              "",
+              "Ми маємо гілку `master`, яка на кілька комітів попереду гілок `one`, `two` та `three`. З незрозумілих причин, нам потрібно оновити ці гілки більш пізніми змінами з мастеру.",
+              "",
+              "Гілку `one` потрібно впорядкувати і видалити `C5`. Гілку `two` також потрібно впорядкувати, а в гілку `three` потрібно додати ще один коміт!",
+              "",
+              "Ми повністю покладаємось на тебе -- порівняй свій розв’зок з нашим, який можна подивитись командою `show solution`. "
             ]
           }
         }

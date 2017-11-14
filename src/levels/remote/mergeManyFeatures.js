@@ -4,21 +4,29 @@ exports.level = {
   "startTree": "{\"branches\":{\"master\":{\"target\":\"C1\",\"id\":\"master\",\"remoteTrackingBranchID\":\"o/master\",\"localBranchesThatTrackThis\":null},\"o/master\":{\"target\":\"C1\",\"id\":\"o/master\",\"remoteTrackingBranchID\":null,\"localBranchesThatTrackThis\":[\"master\"]},\"side1\":{\"target\":\"C2\",\"id\":\"side1\",\"remoteTrackingBranchID\":null,\"localBranchesThatTrackThis\":null},\"side2\":{\"target\":\"C4\",\"id\":\"side2\",\"remoteTrackingBranchID\":null,\"localBranchesThatTrackThis\":null},\"side3\":{\"target\":\"C7\",\"id\":\"side3\",\"remoteTrackingBranchID\":null,\"localBranchesThatTrackThis\":null}},\"commits\":{\"C0\":{\"parents\":[],\"id\":\"C0\",\"rootCommit\":true},\"C1\":{\"parents\":[\"C0\"],\"id\":\"C1\"},\"C2\":{\"parents\":[\"C1\"],\"id\":\"C2\"},\"C3\":{\"parents\":[\"C1\"],\"id\":\"C3\"},\"C4\":{\"parents\":[\"C3\"],\"id\":\"C4\"},\"C5\":{\"parents\":[\"C1\"],\"id\":\"C5\"},\"C6\":{\"parents\":[\"C5\"],\"id\":\"C6\"},\"C7\":{\"parents\":[\"C6\"],\"id\":\"C7\"}},\"HEAD\":{\"target\":\"side3\",\"id\":\"HEAD\"},\"originTree\":{\"branches\":{\"master\":{\"target\":\"C8\",\"id\":\"master\",\"remoteTrackingBranchID\":null,\"localBranchesThatTrackThis\":null}},\"commits\":{\"C0\":{\"parents\":[],\"id\":\"C0\",\"rootCommit\":true},\"C1\":{\"parents\":[\"C0\"],\"id\":\"C1\"},\"C8\":{\"parents\":[\"C1\"],\"id\":\"C8\"}},\"HEAD\":{\"target\":\"master\",\"id\":\"HEAD\"}}}",
   "name": {
     "en_US": "Merging with remotes",
-    "zh_CN": "和远端合并",
+    "zh_CN": "合并远程仓库",
     "zh_TW": "merge with remotes",
     "es_AR": "Mergeando con los remotos",
+    "pt_BR": "Merge com remotos",
     "de_DE": "Änderungen vom Remote zusammenführen",
     "ja"   : "リモートとのmerge",
-    "fr_FR": "Fusionner avec les branches distantes"
+    "fr_FR": "Fusionner avec les branches distantes",
+    "ru_RU": "Слияние с удалённым репозиторием",
+    "ko"   : "원격 작업과 merge하기",
+    "uk"   : "Мердж з віддаленим репозиторієм"
   },
   "hint": {
     "en_US": "Pay attention to the goal tree!",
     "zh_CN": "注意目标树!",
     "zh_TW": "注意最後要完成的目標！",
     "es_AR": "¡Prestá atención al árbol final!",
+    "pt_BR": "Preste atenção na árvore do objetivo!",
     "de_DE": "Beachte den Ziel-Baum!",
-    "ja"   : "ゴールツリーに注意！",
-    "fr_FR": "Respectez l'arbre représentant l'objectif !"
+    "ja"   : "ゴールツリーをよく見てください！",
+    "fr_FR": "Respectez l'arbre représentant l'objectif !",
+    "ru_RU": "Внимательно посмотрите на цель уровня!",
+    "ko"   : "goal을 잘 살펴보세요!",
+    "uk"   : "Уважно подивись як має виглядати результат!"
   },
   "compareOnlyMaster": true,
   "startDialog": {
@@ -75,9 +83,9 @@ exports.level = {
             "markdowns": [
               "## Pourquoi pas merge ?",
               "",
-              "Dans le but d'envoyer de nouvelles modifications sur le dépôt distant, la seule étape préliminaire est *d'incorporer* les derniers changements de ce dépôt dans le nôtre. Cela signifie qu'après, vous pouvez faire un rebase *ou* merge de la branche distante (e.g. `o/master`).",
+              "Dans le but d'envoyer de nouvelles modifications sur le dépôt distant, la seule étape préliminaire est *d'incorporer* les derniers changements de ce dépôt dans le nôtre. Concrètement, vous pouvez faire un rebase *ou* un merge de la branche distante (c'est à dire de `o/master`).",
               "",
-              "Donc si l'on peut faire les deux méthodes, pourquoi les leçons se sont (re)basées (!) sur rebase jusqu'à présent ? Pourquoi n'aime-t-on pas `merge` dans les branches distantes ?",
+              "Donc si l'on peut faire les deux méthodes, pourquoi les leçons se sont-elles concentrées sur rebase jusqu'à présent ? Pourquoi préfère-t-on souvent éviter `merge` lorsque l'on travaille avec les branches distantes ?",
               ""
             ]
           }
@@ -86,7 +94,7 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "Il y a beaucoup de débats à propos du compromis entre l'utilisation de merge et rebase dans la communauté des développeurs. Voici les principaux arguments pour / contre rebase:",
+              "Au sein de la communauté des développeurs, il y a beaucoup de débats à propos des avantages et inconvénients de l'utilisation de merge ou de rebase. Voici les principaux arguments pour et contre rebase:",
               "",
               "Pour :",
               "",
@@ -96,7 +104,7 @@ exports.level = {
               "",
               "* Rebase modifie l'historique (apparent) de l'arbre des commits.",
               "",
-              "Par exemple, le commit `C1` peut être rebasé *après* `C3`. Cela fait croire que le travail de `C1'` est arrivé après `C3` alors qu'en réalité il était complétement avant.",
+              "Par exemple, le commit `C1` peut être rebasé *après* `C3`. Cela fait croire que le travail de `C1'` est arrivé après `C3` alors qu'en réalité il était achevé et commité avant.",
               "",
               "Certains développeurs aiment préserver l'historique et préfèrent donc merge. Les autres (comme moi) préfèrent avoir un arbre des commits propre et préfèrent rebase. C'est une question de goût :D"
             ]
@@ -106,7 +114,7 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "Pour ce niveau, essayons de résoudre le niveau précédent, mais avec *merge* plutôt. Cela peut être un peu périlleux mais cela illustre bien le problème."
+              "Pour ce niveau, essayons de résoudre la même situation qu'au niveau précédent, mais cette fois en utilisant *merge*. Cela peut être un peu périlleux mais cela illustre bien le problème."
             ]
           }
         }
@@ -152,6 +160,51 @@ exports.level = {
           "options": {
             "markdowns": [
               "Para este nivel, tratemos de resolver el nivel anterior, pero *mergeando*. Puede ponerse un poco oscuro, pero ilustra la idea bastante bien."
+            ]
+          }
+        }
+      ]
+    },
+    "pt_BR": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Por que não um merge?",
+              "",
+              "Para enviar novas atualizações ao repositório remoto, tudo que você precisa é *incorporar* as últimas mudanças ali presentes. Isso significa que você pode tanto fazer um rebase *quanto* um merge no ramo remoto (ex. `o/master`).",
+              "",
+              "Então, se você pode escolher qualquer um desses métodos, por que as lições focaram no rebase até o momento? Por que não demos nenhum amor ao `merge` quando trabalhamos com repositórios remotos?",
+              ""
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Há muito debate na comunidade de desenvolvedores sobre as vantagens e desvantagens do merge e do rebase. Aqui estão os prós e contras gerais do rebase:",
+              "",
+              "Prós:",
+              "",
+              "* O rebase faz a sua árvore de commits parecer bastante limpa, já que tudo fica em uma linha reta",
+              "",
+              "Contras:",
+              "",
+              "* O rebase modifica o histórico *aparente* da sua árvore de commits.",
+              "",
+              "Por exemplo, o commit `C1` pode aparecer *depois do* `C3` após sofrer rebase. Então, fica parecendo que alguém trabalhou em `C1` apenas depois de `C3` estar completo, quando na realidade o que ocorreu foi o contrário.",
+              "",
+              "Alguns desenvolvedores adoram preservar o histórico e, portanto, preferem o merge. Outros (como eu) preferem ter uma árvore de commits limpa, obtida usando rebase. Tudo se resume ao gosto pessoal :D"
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Para este nível, tente resolver o mesmo problema do nível anterior, mas usando *merge* em vez de rebase. A árvore pode ficar um pouco cabeluda, mas isso ilustra bem o nosso ponto."
             ]
           }
         }
@@ -247,17 +300,17 @@ exports.level = {
         }
       ]
     },
-   "zh_CN":{
+    "zh_CN":{
       "childViews": [
         {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "## 为何不merge?",
+              "## 为什么不用 merge 呢?",
               "",
-              "为了push新变更到远端，你要做的就是合并远端最新变更(使用rebase or merge). ",
+              "为了 push 新变更到远程仓库，你要做的就是**包含**远程仓库中最新变更。意思就是只要你的本地分支包含了远程分支（如 `o/master`）中的最新变更就可以了，至于具体是用 rebase 还是 merge，并没有限制。",
               "",
-              "所以你可以使用任意一种方法, 但为何本节会聚焦于rebasing 呢？为何会不喜欢用merge 去合并remote 呢？",
+              "那么既然没有规定限制，为何前面几节都在着重于 rebase 呢？为什么在操作远程分支时不喜欢用 `merge` 呢？",
               ""
             ]
           }
@@ -266,19 +319,19 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "在开发社区，有相当多的关于权衡的讨论。以下是关于rebasing 的优点/缺点： ",
+              "在开发社区里，有许多关于 merge 与 rebase 的讨论。以下是关于 rebase 的优缺点：",
               "",
               "优点:",
               "",
-              "* Rebase 使你的提交树变得很干净, 所有的提交成了一条线: ",
+              "* Rebase 使你的提交树变得很干净, 所有的提交都在一条线上",
               "",
               "缺点:",
               "",
-              "* Rebase 修改的提交树的父历史",
+              "* Rebase 修改了提交树的历史",
               "",
-              "比如, 提交C1 可以被修订到跃过C3。这看起来C1 是在C3 之后 (而实际上可能在C3之前) ",
+              "比如, 提交 C1 可以被 rebase 到 C3 之后。这看起来 C1 中的工作是在 C3 之后进行的，但实际上是在 C3 之前。",
               "",
-              "一些开发者喜欢保留提交历史，更偏爱merging。而其它的人而喜欢拥有更干净的提交树，偏爱rebasing。这些都依赖于自己的偏爱.  :D"
+              "一些开发人员喜欢保留提交历史，因此更偏爱 merge。而其他人（比如我自己）可能更喜欢干净的提交树，于是偏爱 rebase。仁者见仁，智者见智。 :D"
             ]
           }
         },
@@ -286,7 +339,187 @@ exports.level = {
           "type": "ModalAlert",
           "options": {
             "markdowns": [
-              "本节，我们要解决前面的单元问题，但是要用merging。这显得有点那啥了，但这只是为了更好的说明这一点。 "
+              "本关，我们还是解决上一关卡中的问题，但是要用 merge 替换 rebase。这显然有点画蛇添足，但这只是为了更好的说明上面的观点。"
+            ]
+          }
+        }
+      ]
+    },
+    "ja": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## なぜマージではいけないのか？",
+              "",
+              "新しい更新をリモートにプッシュするため、あなたがする必要があるのはリモートからの最近の変更の*組み込み*です。それは、リモートブランチ(例えば、`o/master`)にリベース*か*マージのどちらかをあなたがする必要があるということを意味します。",
+              "",
+              "もしどっちの方法でも行うことができるなら、なぜこれまでのレッスンでは、リベースに焦点を当ててきたのでしょう？リモートへの作業で、なぜ`merge`を推してこなかったのでしょうか？",
+              ""
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "開発コミュニティで、マージとリベースの間でのトレードオフについては多くの議論がなされています。ここでは一般的なリベースのメリット/デメリットを紹介しましょう:",
+              "",
+              "メリット:",
+              "",
+              "* リベースは全てが直線上にあるので、あなたのコミットツリーをとても綺麗にみせます。",
+              "",
+              "デメリット:",
+              "",
+              "* リベースは、コミットツリーの（見ため上の）履歴を改変してしまいます。",
+              "",
+              "例えば、`C1`コミットは*過去*の`C3`コミットにリベースすることができます。それは、実際には前に完了しているのにもかかわらず、`C1'`の作業がまるで`C3`の後に行われたものであるかのように見えるようになります。",
+              "",
+              "幾人かの開発者は、履歴をそのまま保持するのが好みで、マージを選択します。その他（例えば私は）きれいなコミットツリーを好むのでリベースを選択します。つまるところ、好みの問題というわけですね :D"
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "このレベルでは、前回のレベルを*マージ*を代わりに使って解いてみてください。ちょっと難しいかもしれませんが、このレッスンのポイントを把握するのに十分な知見を得られるはずです。"
+            ]
+          }
+        }
+      ]
+    },
+    "ru_RU": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Merge? Нет, нет, спасибо.",
+              "",
+              "Чтобы закачать (push) новые изменения в удалённый репозиторий, всё, что вам нужно сделать - это *смешать* последние изменения из удалённого репозитория. Это значит, что вы можете выполнить rebase *или* merge на удалённом репозитории (например, `o/master`).",
+              "",
+              "Если мы можем воспользоваться одним из двух методов, то почему же эти упражнения сфокусированы в основном на rebase? К чему такая нелюбовь к `merge`, когда речь идёт о работе с удалёнными репозиториями?",
+              ""
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "В среде разработчиков существует огромное количество дебатов около merging и rebasing. Ниже приведены основные за / против метода rebasing:",
+              "",
+              "За:",
+              "",
+              "* Rebasing делает дерево коммитов более чистым и читабельным, потому что всё представляется единой прямой линией.",
+              "",
+              "Против:",
+              "",
+              "* Метод rebasing явно изменяет историю коммитов в дереве.",
+              "",
+              "Например, коммит `C1` может быть перебазирован *после* `C3`. Соответственно, в дереве работа над `C1'` будет отображаться как идущая после `C3`, хотя на самом деле она была выполнена раньше.",
+              "",
+              "Некоторые разработчики любят сохранять историю и предпочитают слияние (merging). Другие (такие как я) предпочитают иметь чистое дерево коммитов, и пользуются перебазировкой (rebasing). Всё зависит от ваших предпочтений и вкусов :D"
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "Чтобы пройти этот уровень, решите предыдущие задачи, но с помощью *слияния (merging)*. Может быть, получится слегка неказисто, однако такое упражнение хорошо отразит суть различий."
+            ]
+          }
+        }
+      ]
+    },
+    "ko": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## 왜 merge하지 않는거죠?",
+              "",
+              "새로운 작업들을 원격 저장소로 push하기위해서 여러분은 원격 저장소의 최근 변경들을 *합치기*만 하면 됩니다. 이 말은 즉 원격 브랜치로(예:`o/master`) rebase를 할 수도 merge를 할 수도 있다는 것입니다.",
+              "",
+              "두가지를 다 할 수 있다면, 왜 지금까지 배운 레슨들은 rebase를 하는것에 집중한거죠? 원격 저장소와 작업을 할때는 왜 `merge`에게 관심을 가져주지 않는건가요?",
+              ""
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "개발 커뮤니티에서 merge를 하는것과 rebase 사이의 트레이드 오프에 대해 많은 논의가 이루어지고 있습니다. 여기 rebase의 일반적인 장 / 단점을 소개하겠습니다:",
+              "",
+              "장점:",
+              "",
+              "* rebase는 여러분의 커밋 트리를 깔끔하게 정리해서 보기가 좋습니다 모든게 한 줄에 있기때문이죠.",
+              "",
+              "단점:",
+              "",
+              "* rebase를 하게 되면 커밋 트리의 (보이는)히스토리를 수정합니다.",
+              "",
+              "예를 들어, 커밋 `C1`는 *과거*의`C3`로 rebase 될 수 있습니다. `C1'`의 작업이 `C3`의 다음에 있는것으로 보이게 되는겁니다. 실제로는 `C1`이 먼저 완료된거인데 말이죠.",
+              "",
+              "어떤 개발자들은 이력이 보존되는것을 좋아하기 때문에 merge를 선호합니다. 그 이외는(저 처럼) 커밋 트리가 깔끔한것을 선호해서 rebase를 선호합니다. 자기 입맛에 맞추면 되겠습니다 :D"
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "이번 레벨에서는 이전의 레벨을 해결 해봅시다. 대신 이번에는 *merge*를 사용하겠습니다. 조금 복잡할 수 있지만 지금 배운 내용의 포인트를 파악하기 좋을것 입니다."
+            ]
+          }
+        }
+      ]
+    },
+    "uk": {
+      "childViews": [
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "## Чому б не змерджити?",
+              "",
+              "Для того, щоб віддалений сервер прийняв твої зміни, треба *об'єднати* їх з останніми змінами на сервері. Це означає ребейс *або* мердж з віддаленою гілкою (напр. `o/master`).",
+              "",
+              "Хмм, якщо можна використати один із цих методів, для чого нам додаткові уроки про ребейс? Чому ніхто не любить `merge`, працюючи з віддаленим сервером?",
+              ""
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "В спільноті розробників давно ведуться суперечки щодо переваг і недоліків мерджингу і ребейсу. Ось головні з них для ребейсу:",
+              "",
+              "За:",
+              "",
+              "* Ребейс дозволяє тримати дерево комітів чистим, оскільки все вибудовується в пряму лінію;",
+              "",
+              "Проти:",
+              "",
+              "* Ребейс змінює історію в дереві комітів.",
+              "",
+              "Наприклад, коміт `C1` можна ребейснути *на* `C3`. Як результат `C1'` буде йти після `C3`, хоча насправді його зробили раніше.",
+              "",
+              "Деякі розробники люблять зберігати історії і тому вибирають мерджинг. Інші (як і я) воліють мати чисте дерево комітів і віддають перевагу ребейсу. Це питання смаку :D"
+            ]
+          }
+        },
+        {
+          "type": "ModalAlert",
+          "options": {
+            "markdowns": [
+              "На цьому рівні спробуймо вирішити попереднє завдання з використанням *мерджу*. Можливо вийде не так охайно, але добре покаже різницю в підходах."
             ]
           }
         }

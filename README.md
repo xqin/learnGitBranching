@@ -1,5 +1,7 @@
 # LearnGitBranching
 
+[![Build Status](https://travis-ci.org/pcottle/learnGitBranching.svg?branch=master)](https://travis-ci.org/pcottle/learnGitBranching)
+
 LearnGitBranching is a git repository visualizer, sandbox, and series of educational tutorials and challenges. Its primary purpose is to help developers understand git through the power of visualization (something that's absent when working on the command line).
 
 You can input a variety of commands into LearnGitBranching (LGB) -- as commands are processed, the nearby commit tree will dynamically update to reflect the effects of each command:
@@ -19,7 +21,7 @@ By default the application launches in "sandbox mode" with a basic repository al
 
 * `undo` to undo the effects of the last command
 * `reset` to start over from a clean slate (works in levels too)
-* `git clone` to play with remote repositories!
+* `git clone` to simulate remote repositories!
 
 Sandbox mode can be great for demonstrating something to a friend, but the real learning is with levels...
 
@@ -40,7 +42,7 @@ When reporting bugs, try running the command `debug_copyTree()` in your JS conso
 
 ## How the app works / Contributing functionality
 
-LearnGitBranching is a pretty simple application (from a technical perspective). There's no backend database or any AJAX requests -- it's a 100% clientside application written in Javascript. The production version (on github.io) literally just serves up an html page with some JS and CSS. The rest of the magic lies in the 9k+ lines of Javascript :P
+LearnGitBranching is a pretty simple application (from a technical perspective). There's no backend database or any AJAX requests -- it's a 100% clientside application written in JavaScript. The production version (on github.io) literally just serves up an HTML page with some JS and CSS. The rest of the magic lies in the 9k+ lines of JavaScript :P
 
 Because the app contains a lot of code, I have written everything into Nodejs-style modules. The modules are packaged together with the `Browserify` and then sent down in a format the browser can understand.
 
@@ -50,7 +52,7 @@ Here is the high level process of the build:
 
 * Code is written into the node.js modules which require other modules
 * CSS is written into just one stylesheet (theres not a whole ton of styling)
-* New HTML is written into a template html file (`template.index.html`). Only needed
+* New HTML is written into a template HTML file (`template.index.html`). Only needed
   for new views
 * The app is "built", which outputs:
   * `index.html` in the root directory
@@ -114,6 +116,9 @@ And the following heroes for assisting in translating:
 * Marc-Olivier Arsenault ("marcolivierarsenault")
 * Eroany H Leader ("lhyqy5")
 * Honorat ("ahonorat")
+* Vasil Kulakov ("coyl") & Lyubov Agadjanyan ("shayenblue")
+* Aliaksei Berkau ("alexeiberkov")
+* Mizunashi Mana ("mizunashi-mana")
 
 Also huge shoutout for everyone who has put up a pull request that was pulled! Check out the 30+ contributors we have in the [Contributors View](https://github.com/pcottle/learnGitBranching/graphs/contributors)
 

@@ -1,14 +1,9 @@
 var _ = require('underscore');
 var Q = require('q');
-var Backbone = require('backbone');
 
+var intl = require('../intl');
 var GRAPHICS = require('../util/constants').GRAPHICS;
-var GlobalState = require('../util/globalState');
-
-var Collections = require('../models/collections');
-var CommitCollection = Collections.CommitCollection;
-var BranchCollection = Collections.BranchCollection;
-var TagCollection = Collections.TagCollection;
+var GlobalStateStore = require('../stores/GlobalStateStore');
 
 var VisNode = require('../visuals/visNode').VisNode;
 var VisBranch = require('../visuals/visBranch').VisBranch;
@@ -44,10 +39,10 @@ function GitVisuals(options) {
 
   this.branchCollection.on('add', this.addBranchFromEvent, this);
   this.branchCollection.on('remove', this.removeBranch, this);
-  
+
   this.tagCollection.on('add', this.addTagFromEvent, this);
   this.tagCollection.on('remove', this.removeTag, this);
-  
+
   this.deferred = [];
 
   this.flipFraction = 0.65;
@@ -101,6 +96,11 @@ GitVisuals.prototype.resetAll = function() {
 GitVisuals.prototype.tearDown = function() {
   this.resetAll();
   this.paper.remove();
+  // Unregister the refresh tree listener so we dont accumulate
+  // these over time. However we aren't calling tearDown in
+  // some places... but this is an improvement
+  var Main = require('../app');
+  Main.getEvents().removeListener('refreshTree', this.refreshTree);
 };
 
 GitVisuals.prototype.assignGitEngine = function(gitEngine) {
@@ -125,7 +125,7 @@ GitVisuals.prototype.initHeadBranch = function() {
 
 GitVisuals.prototype.getScreenPadding = function() {
   // if we are flipping the tree, the helper bar gets in the way
-  var topFactor = (GlobalState.flipTreeY) ? 3 : 1.5;
+  var topFactor = (GlobalStateStore.getFlipTreeY()) ? 3 : 1.5;
 
   // for now we return the node radius subtracted from the walls
   return {
@@ -187,7 +187,7 @@ GitVisuals.prototype.toScreenCoords = function(pos) {
   var y =
     asymShrink(pos.y, this.paper.height, padding.topHeightPadding, padding.bottomHeightPadding);
 
-  if (GlobalState.flipTreeY) {
+  if (GlobalStateStore.getFlipTreeY()) {
     y = this.paper.height - y;
   }
 
@@ -214,16 +214,21 @@ GitVisuals.prototype.animateAllAttrKeys = function(keys, attr, speed, easing) {
   return deferred.promise;
 };
 
-GitVisuals.prototype.finishAnimation = function() {
+GitVisuals.prototype.finishAnimation = function(speed) {
+  speed = speed || 1.0;
+  if (!speed) {
+    throw new Error('need speed by time i finish animation' + speed);
+  }
+
   var _this = this;
   var deferred = Q.defer();
   var animationDone = Q.defer();
   var defaultTime = GRAPHICS.defaultAnimationTime;
   var nodeRadius = GRAPHICS.nodeRadius;
 
-  var textString = 'Solved!!\n:D';
+  var textString = intl.str('solved-level');
   var text = null;
-  var makeText = _.bind(function() {
+  var makeText = function() {
     text = this.paper.text(
       this.paper.width / 2,
       this.paper.height / 2,
@@ -239,7 +244,7 @@ GitVisuals.prototype.finishAnimation = function() {
       fill: '#000'
     });
     text.animate({ opacity: 1 }, defaultTime);
-  }, this);
+  }.bind(this);
 
   // this is a BIG ANIMATION but it ends up just being
   // a sweet chain of promises but is pretty nice. this is
@@ -249,47 +254,47 @@ GitVisuals.prototype.finishAnimation = function() {
 
   deferred.promise
   // first fade out everything but circles
-  .then(_.bind(function() {
+  .then(function() {
     return this.animateAllAttrKeys(
       { exclude: ['circle'] },
       { opacity: 0 },
-      defaultTime * 1.1
+      defaultTime * 1.1 / speed
     );
-  }, this))
+  }.bind(this))
   // then make circle radii bigger
-  .then(_.bind(function() {
+  .then(function() {
     return this.animateAllAttrKeys(
       { exclude: ['arrow', 'rect', 'path', 'text'] },
       { r: nodeRadius * 2 },
-      defaultTime * 1.5
+      defaultTime * 1.5 / speed
     );
-  }, this))
+  }.bind(this))
   // then shrink em super fast
-  .then(_.bind(function() {
+  .then(function() {
     return this.animateAllAttrKeys(
       { exclude: ['arrow', 'rect', 'path', 'text'] },
       { r: nodeRadius * 0.75 },
-      defaultTime * 0.5
+      defaultTime * 0.5 / speed
     );
-  }, this))
+  }.bind(this))
   // then explode them and display text
-  .then(_.bind(function() {
+  .then(function() {
     makeText();
-    return this.explodeNodes();
-  }, this))
-  .then(_.bind(function() {
-    return this.explodeNodes();
-  }, this))
+    return this.explodeNodes(speed);
+  }.bind(this))
+  .then(function() {
+    return this.explodeNodes(speed);
+  }.bind(this))
   // then fade circles (aka everything) in and back
-  .then(_.bind(function() {
+  .then(function() {
     return this.animateAllAttrKeys(
       { exclude: ['arrow', 'rect', 'path', 'text'] },
       {},
       defaultTime * 1.25
     );
-  }, this))
+  }.bind(this))
   // then fade everything in and remove text
-  .then(_.bind(function() {
+  .then(function() {
     text.animate({ opacity: 0 }, defaultTime, undefined, undefined, function() {
       text.remove();
     });
@@ -297,7 +302,7 @@ GitVisuals.prototype.finishAnimation = function() {
       {},
       {}
     );
-  }, this))
+  }.bind(this))
   .then(function() {
     animationDone.resolve();
   })
@@ -311,11 +316,11 @@ GitVisuals.prototype.finishAnimation = function() {
   return animationDone.promise;
 };
 
-GitVisuals.prototype.explodeNodes = function() {
+GitVisuals.prototype.explodeNodes = function(speed) {
   var deferred = Q.defer();
   var funcs = [];
   _.each(this.visNodeMap, function(visNode) {
-    funcs.push(visNode.getExplodeStepFunc());
+    funcs.push(visNode.getExplodeStepFunc(speed));
   });
 
   var interval = setInterval(function() {
@@ -520,7 +525,7 @@ GitVisuals.prototype.calcTagStacks = function() {
   var map = {};
   _.each(tags, function(tag) {
       var thisId = tag.target.get('id');
-  
+
       map[thisId] = map[thisId] || [];
       map[thisId].push(tag);
       map[thisId].sort(function(a, b) {
@@ -654,9 +659,9 @@ GitVisuals.prototype.animateNodePositions = function(speed) {
 };
 
 GitVisuals.prototype.addBranchFromEvent = function(branch, collection, index) {
-  var action = _.bind(function() {
+  var action = function() {
     this.addBranch(branch);
-  }, this);
+  }.bind(this);
 
   if (!this.gitEngine || !this.gitReady) {
     this.defer(action);
@@ -676,16 +681,16 @@ GitVisuals.prototype.addBranch = function(branch) {
   if (this.gitReady) {
     visBranch.genGraphics(this.paper);
   } else {
-    this.defer(_.bind(function() {
+    this.defer(function() {
       visBranch.genGraphics(this.paper);
-    }, this));
+    }.bind(this));
   }
 };
 
 GitVisuals.prototype.addTagFromEvent = function(tag, collection, index) {
-  var action = _.bind(function() {
+  var action = function() {
     this.addTag(tag);
-  }, this);
+  }.bind(this);
 
   if (!this.gitEngine || !this.gitReady) {
     this.defer(action);
@@ -705,9 +710,9 @@ GitVisuals.prototype.addTag = function(tag) {
   if (this.gitReady) {
     visTag.genGraphics(this.paper);
   } else {
-    this.defer(_.bind(function() {
+    this.defer(function() {
       visTag.genGraphics(this.paper);
-    }, this));
+    }.bind(this));
   }
 };
 
@@ -789,9 +794,9 @@ GitVisuals.prototype.canvasResize = function(width, height) {
 
 GitVisuals.prototype.genResizeFunc = function() {
   this.resizeFunc = _.debounce(
-    _.bind(function(width, height) {
+    function(width, height) {
       this.refreshTree();
-    }, this),
+    }.bind(this),
     200,
     true
   );

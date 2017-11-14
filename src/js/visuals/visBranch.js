@@ -289,7 +289,7 @@ var VisBranch = VisBase.extend({
   getTextSize: function() {
     var getTextWidth = function(visBranch) {
       var textNode = (visBranch.get('text')) ? visBranch.get('text').node : null;
-      return (textNode === null) ? 0 : textNode.clientWidth;
+      return (textNode === null) ? 0 : textNode.getBoundingClientRect().width;
     };
 
     var firefoxFix = function(obj) {
@@ -301,9 +301,10 @@ var VisBranch = VisBase.extend({
     var textNode = this.get('text').node;
     if (this.get('isHead')) {
       // HEAD is a special case
+      var size = textNode.getBoundingClientRect();
       return firefoxFix({
-        w: textNode.clientWidth,
-        h: textNode.clientHeight
+        w: size.width,
+        h: size.height
       });
     }
 
@@ -451,7 +452,7 @@ var VisBranch = VisBase.extend({
     ];
 
     _.each(objs, function(rObj) {
-      rObj.click(_.bind(this.onClick ,this));
+      rObj.click(this.onClick.bind(this));
     }, this);
   },
 
@@ -502,7 +503,7 @@ var VisBranch = VisBase.extend({
     if (this.getIsGoalAndNotCompared()) {
       return this.get('stroke-width') / 5.0;
     }
-    
+
     return this.get('stroke-width');
   },
 
